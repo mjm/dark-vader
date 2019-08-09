@@ -9,3 +9,9 @@ query GetClip($id: ID!) {
     quote
   }
 }
+
+query GetRandomClip {
+  randomClip {
+    id
+  }
+}

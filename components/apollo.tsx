@@ -28,7 +28,10 @@ const config = (ctx?: NextPageContext) => {
 
 let cachedClient: ApolloClient<any> | undefined
 
-function initApollo(cacheData: any, ctx?: NextPageContext): ApolloClient<any> {
+export function initApollo(
+  cacheData: any,
+  ctx?: NextPageContext
+): ApolloClient<any> {
   const clientConfig = config(ctx)
 
   function create() {

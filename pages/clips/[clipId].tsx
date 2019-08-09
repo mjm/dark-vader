@@ -3,6 +3,8 @@ import { NextPage } from "next"
 import withData from "../../components/apollo"
 import { useGetClipQuery } from "../../lib/generated/graphql-components"
 import { Clip } from "../../components/clip"
+import { Box, Button } from "@material-ui/core"
+import Router from "next/router"
 
 interface Props {
   clipId: string
@@ -22,7 +24,20 @@ const ShowClip: NextPage<Props> = ({ clipId }) => {
   }
 
   const clip = data.clip
-  return <Clip clip={clip} />
+  return (
+    <Box>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => {
+          Router.push("/clips/random")
+        }}
+      >
+        Random
+      </Button>
+      <Clip clip={clip} />
+    </Box>
+  )
 }
 
 ShowClip.getInitialProps = async ({ query }): Promise<Props> => {

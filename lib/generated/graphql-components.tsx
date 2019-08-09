@@ -51,6 +51,12 @@ export type GetClipQuery = { __typename?: "Query" } & {
     }
 }
 
+export type GetRandomClipQueryVariables = {}
+
+export type GetRandomClipQuery = { __typename?: "Query" } & {
+  randomClip: { __typename?: "Clip" } & Pick<Clip, "id">
+}
+
 export const GetClipDocument = gql`
   query GetClip($id: ID!) {
     clip(id: $id) {
@@ -80,4 +86,30 @@ export type GetClipQueryHookResult = ReturnType<typeof useGetClipQuery>
 export type GetClipQueryResult = ApolloReactCommon.QueryResult<
   GetClipQuery,
   GetClipQueryVariables
+>
+export const GetRandomClipDocument = gql`
+  query GetRandomClip {
+    randomClip {
+      id
+    }
+  }
+`
+
+export function useGetRandomClipQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetRandomClipQuery,
+    GetRandomClipQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    GetRandomClipQuery,
+    GetRandomClipQueryVariables
+  >(GetRandomClipDocument, baseOptions)
+}
+export type GetRandomClipQueryHookResult = ReturnType<
+  typeof useGetRandomClipQuery
+>
+export type GetRandomClipQueryResult = ApolloReactCommon.QueryResult<
+  GetRandomClipQuery,
+  GetRandomClipQueryVariables
 >
