@@ -11,9 +11,18 @@ export type Scalars = {
   Float: number
 }
 
+export type Clip = {
+  __typename?: "Clip"
+  id: Scalars["ID"]
+  video: Video
+  start: Scalars["Int"]
+  quote: Scalars["String"]
+}
+
 export type Query = {
   __typename?: "Query"
   videos: Array<Video>
+  clips: Array<Clip>
 }
 
 export type Video = {

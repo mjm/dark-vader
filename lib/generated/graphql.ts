@@ -13,9 +13,18 @@ export type Scalars = {
   Cursor: string
 }
 
+export type Clip = {
+  __typename?: "Clip"
+  id: Scalars["ID"]
+  video: Video
+  start: Scalars["Int"]
+  quote: Scalars["String"]
+}
+
 export type Query = {
   __typename?: "Query"
   videos: Array<Video>
+  clips: Array<Clip>
 }
 
 export type Video = {
@@ -104,6 +113,8 @@ export type ResolversTypes = {
   Video: ResolverTypeWrapper<AirtableRow>
   ID: ResolverTypeWrapper<Scalars["ID"]>
   String: ResolverTypeWrapper<Scalars["String"]>
+  Clip: ResolverTypeWrapper<AirtableRow>
+  Int: ResolverTypeWrapper<Scalars["Int"]>
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>
 }
 
@@ -113,7 +124,19 @@ export type ResolversParentTypes = {
   Video: AirtableRow
   ID: Scalars["ID"]
   String: Scalars["String"]
+  Clip: AirtableRow
+  Int: Scalars["Int"]
   Boolean: Scalars["Boolean"]
+}
+
+export type ClipResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Clip"] = ResolversParentTypes["Clip"]
+> = {
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>
+  video?: Resolver<ResolversTypes["Video"], ParentType, ContextType>
+  start?: Resolver<ResolversTypes["Int"], ParentType, ContextType>
+  quote?: Resolver<ResolversTypes["String"], ParentType, ContextType>
 }
 
 export type QueryResolvers<
@@ -121,6 +144,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = {
   videos?: Resolver<Array<ResolversTypes["Video"]>, ParentType, ContextType>
+  clips?: Resolver<Array<ResolversTypes["Clip"]>, ParentType, ContextType>
 }
 
 export type VideoResolvers<
@@ -141,6 +165,7 @@ export type VideoResolvers<
 }
 
 export type Resolvers<ContextType = any> = {
+  Clip?: ClipResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
   Video?: VideoResolvers<ContextType>
 }

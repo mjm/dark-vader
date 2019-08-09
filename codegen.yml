@@ -13,6 +13,7 @@ generates:
       scalars:
         Cursor: string
       mappers:
+        Clip: AirtableRow
         Video: AirtableRow
   lib/generated/graphql-components.tsx:
     plugins:

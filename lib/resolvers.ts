@@ -1,5 +1,9 @@
-import { QueryResolvers, VideoResolvers } from "./generated/graphql"
-import { videos } from "./airtable"
+import {
+  QueryResolvers,
+  VideoResolvers,
+  ClipResolvers
+} from "./generated/graphql"
+import { videos, clips } from "./airtable"
 
 export const Query: QueryResolvers = {
   async videos() {
@@ -8,6 +12,25 @@ export const Query: QueryResolvers = {
         sort: [{ field: "Published", direction: "asc" }]
       })
       .all()) as Airtable.Row<{}>[]
+  },
+
+  async clips() {
+    return (await clips.select().all()) as Airtable.Row<{}>[]
+  }
+}
+
+export const Clip: ClipResolvers = {
+  async video({ fields }) {
+    const [videoID] = fields["Video"]
+    return ((await videos.find(videoID)) as unknown) as Airtable.Row<{}>
+  },
+
+  start({ fields }) {
+    return fields["Start Time"]
+  },
+
+  quote({ fields }) {
+    return fields["Quote Text"]
   }
 }
 
