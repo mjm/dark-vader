@@ -1,0 +1,25 @@
+overwrite: true
+schema: "lib/schema.js"
+documents: lib/*.graphql
+generates:
+  lib/generated/graphql.ts:
+    plugins:
+      - add: "import Airtable from 'airtable'"
+      - add: "type AirtableRow = Airtable.Row<{}>"
+      - add: "export type EnumMap<T extends string, U> = { [K in T]: U }"
+      - "typescript"
+      - "typescript-resolvers"
+    config:
+      scalars:
+        Cursor: string
+      mappers:
+        Video: AirtableRow
+  lib/generated/graphql-components.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false

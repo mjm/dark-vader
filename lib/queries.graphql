@@ -1,0 +1,6 @@
+query AllVideos {
+  videos {
+    id
+    name
+  }
+}
