@@ -27,14 +27,18 @@ export const Query: QueryResolvers = {
       .firstPage()
     const highestID = highestIDClips[0].fields["ID"]
 
-    const randomID = Math.floor(Math.random() * Math.floor(highestID)) + 1
-    const clipArray = await clips
-      .select({
-        filterByFormula: `{ID} = ${randomID}`,
-        maxRecords: 1
-      })
-      .firstPage()
-    return clipArray[0]
+    while (true) {
+      const randomID = Math.floor(Math.random() * Math.floor(highestID)) + 1
+      const clipArray = await clips
+        .select({
+          filterByFormula: `{ID} = ${randomID}`,
+          maxRecords: 1
+        })
+        .firstPage()
+      if (clipArray.length) {
+        return clipArray[0]
+      }
+    }
   }
 }
 
