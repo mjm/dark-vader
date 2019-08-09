@@ -1,6 +1,11 @@
-query AllVideos {
-  videos {
+query GetClip($id: ID!) {
+  clip(id: $id) {
     id
-    name
+    video {
+      name
+      videoID
+    }
+    start
+    quote
   }
 }

@@ -18,6 +18,11 @@ export const Query: QueryResolvers = {
     return (await clips.select().all()) as Airtable.Row<{}>[]
   },
 
+  async clip(_, { id }) {
+    const clip = await clips.find(id)
+    return (clip as unknown) as Airtable.Row<{}>
+  },
+
   async randomClip() {
     const highestIDClips = await clips
       .select({

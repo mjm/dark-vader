@@ -25,7 +25,12 @@ export type Query = {
   __typename?: "Query"
   videos: Array<Video>
   clips: Array<Clip>
+  clip: Clip
   randomClip: Clip
+}
+
+export type QueryClipArgs = {
+  id: Scalars["ID"]
 }
 
 export type Video = {
@@ -146,6 +151,12 @@ export type QueryResolvers<
 > = {
   videos?: Resolver<Array<ResolversTypes["Video"]>, ParentType, ContextType>
   clips?: Resolver<Array<ResolversTypes["Clip"]>, ParentType, ContextType>
+  clip?: Resolver<
+    ResolversTypes["Clip"],
+    ParentType,
+    ContextType,
+    QueryClipArgs
+  >
   randomClip?: Resolver<ResolversTypes["Clip"], ParentType, ContextType>
 }
 

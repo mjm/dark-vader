@@ -23,7 +23,12 @@ export type Query = {
   __typename?: "Query"
   videos: Array<Video>
   clips: Array<Clip>
+  clip: Clip
   randomClip: Clip
+}
+
+export type QueryClipArgs = {
+  id: Scalars["ID"]
 }
 
 export type Video = {
@@ -36,34 +41,43 @@ export type Video = {
   monsterName?: Maybe<Scalars["String"]>
   published?: Maybe<Scalars["String"]>
 }
-export type AllVideosQueryVariables = {}
-
-export type AllVideosQuery = { __typename?: "Query" } & {
-  videos: Array<{ __typename?: "Video" } & Pick<Video, "id" | "name">>
+export type GetClipQueryVariables = {
+  id: Scalars["ID"]
 }
 
-export const AllVideosDocument = gql`
-  query AllVideos {
-    videos {
+export type GetClipQuery = { __typename?: "Query" } & {
+  clip: { __typename?: "Clip" } & Pick<Clip, "id" | "start" | "quote"> & {
+      video: { __typename?: "Video" } & Pick<Video, "name" | "videoID">
+    }
+}
+
+export const GetClipDocument = gql`
+  query GetClip($id: ID!) {
+    clip(id: $id) {
       id
-      name
+      video {
+        name
+        videoID
+      }
+      start
+      quote
     }
   }
 `
 
-export function useAllVideosQuery(
+export function useGetClipQuery(
   baseOptions?: ApolloReactHooks.QueryHookOptions<
-    AllVideosQuery,
-    AllVideosQueryVariables
+    GetClipQuery,
+    GetClipQueryVariables
   >
 ) {
-  return ApolloReactHooks.useQuery<AllVideosQuery, AllVideosQueryVariables>(
-    AllVideosDocument,
+  return ApolloReactHooks.useQuery<GetClipQuery, GetClipQueryVariables>(
+    GetClipDocument,
     baseOptions
   )
 }
-export type AllVideosQueryHookResult = ReturnType<typeof useAllVideosQuery>
-export type AllVideosQueryResult = ApolloReactCommon.QueryResult<
-  AllVideosQuery,
-  AllVideosQueryVariables
+export type GetClipQueryHookResult = ReturnType<typeof useGetClipQuery>
+export type GetClipQueryResult = ApolloReactCommon.QueryResult<
+  GetClipQuery,
+  GetClipQueryVariables
 >
