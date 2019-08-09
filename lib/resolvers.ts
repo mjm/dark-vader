@@ -16,6 +16,25 @@ export const Query: QueryResolvers = {
 
   async clips() {
     return (await clips.select().all()) as Airtable.Row<{}>[]
+  },
+
+  async randomClip() {
+    const highestIDClips = await clips
+      .select({
+        sort: [{ field: "ID", direction: "desc" }],
+        maxRecords: 1
+      })
+      .firstPage()
+    const highestID = highestIDClips[0].fields["ID"]
+
+    const randomID = Math.floor(Math.random() * Math.floor(highestID)) + 1
+    const clipArray = await clips
+      .select({
+        filterByFormula: `{ID} = ${randomID}`,
+        maxRecords: 1
+      })
+      .firstPage()
+    return clipArray[0]
   }
 }
 
