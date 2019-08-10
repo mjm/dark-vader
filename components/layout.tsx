@@ -9,7 +9,9 @@ import {
   Button,
   CssBaseline,
   Paper,
-  Breadcrumbs
+  Breadcrumbs,
+  Box,
+  Link
 } from "@material-ui/core"
 import AutorenewIcon from "@material-ui/icons/Autorenew"
 import Router from "next/router"
@@ -66,7 +68,30 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Container className={classes.container}>{children}</Container>
+      <Container className={classes.container}>
+        {children}
+        <Box mt={6}>
+          <Typography variant="body2" color="textSecondary" align="center">
+            Created by{" "}
+            <Link
+              href="https://www.mattmoriarity.com/"
+              target="_blank"
+              rel="noopener"
+            >
+              Matt Moriarity
+            </Link>
+            . Source code available on{" "}
+            <Link
+              href="https://github.com/mjm/dark-vader/"
+              target="_blank"
+              rel="noopener"
+            >
+              GitHub
+            </Link>
+            .
+          </Typography>
+        </Box>
+      </Container>
     </>
   )
 }
