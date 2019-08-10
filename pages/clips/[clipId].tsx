@@ -5,6 +5,7 @@ import { useGetClipQuery } from "../../lib/generated/graphql-components"
 import { Clip } from "../../components/clip"
 import { Box, Button } from "@material-ui/core"
 import Router from "next/router"
+import Layout from "../../components/layout"
 
 interface Props {
   clipId: string
@@ -25,18 +26,9 @@ const ShowClip: NextPage<Props> = ({ clipId }) => {
 
   const clip = data.clip
   return (
-    <Box>
-      <Button
-        color="primary"
-        variant="contained"
-        onClick={() => {
-          Router.push("/clips/random")
-        }}
-      >
-        Random
-      </Button>
+    <Layout>
       <Clip clip={clip} />
-    </Box>
+    </Layout>
   )
 }
 
