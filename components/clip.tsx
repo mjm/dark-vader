@@ -8,7 +8,6 @@ interface Props {
 export const Clip: React.FC<Props> = ({ clip }) => {
   return (
     <Box textAlign="center">
-      <Typography variant="h4">{clip.video.name}</Typography>
       <YouTube
         videoId={clip.video.videoID}
         opts={{

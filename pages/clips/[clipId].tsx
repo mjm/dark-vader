@@ -3,8 +3,7 @@ import { NextPage } from "next"
 import withData from "../../components/apollo"
 import { useGetClipQuery } from "../../lib/generated/graphql-components"
 import { Clip } from "../../components/clip"
-import { Box, Button } from "@material-ui/core"
-import Router from "next/router"
+import { Typography } from "@material-ui/core"
 import Layout from "../../components/layout"
 
 interface Props {
@@ -17,16 +16,20 @@ const ShowClip: NextPage<Props> = ({ clipId }) => {
   })
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Layout>Loading...</Layout>
   }
 
   if (error) {
-    return <div>Error: {error}</div>
+    return <Layout>Error: {error}</Layout>
   }
 
   const clip = data.clip
   return (
-    <Layout>
+    <Layout
+      breadcrumbs={
+        <Typography variant="subtitle1">{clip.video.name}</Typography>
+      }
+    >
       <Clip clip={clip} />
     </Layout>
   )

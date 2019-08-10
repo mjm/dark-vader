@@ -20,7 +20,7 @@ Random.getInitialProps = async ctx => {
     ctx.res.writeHead(301, { Location: `/clips/${id}` })
     ctx.res.end()
   } else {
-    Router.replace("/clips/[clipdId]", `/clips/${id}`)
+    Router.replace("/clips/[clipId]", `/clips/${id}`)
   }
 
   return {}

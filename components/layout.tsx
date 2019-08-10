@@ -8,8 +8,10 @@ import {
   createStyles,
   Button,
   CssBaseline,
-  Paper
+  Paper,
+  Breadcrumbs
 } from "@material-ui/core"
+import AutorenewIcon from "@material-ui/icons/Autorenew"
 import Router from "next/router"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,12 +26,20 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2)
     },
     title: {
-      flexGrow: 1
+      flexGrow: 1,
+      color: theme.palette.common.white
+    },
+    icon: {
+      marginRight: theme.spacing(0.5)
     }
   })
 )
 
-const Layout: React.FC = ({ children }) => {
+interface Props {
+  breadcrumbs?: React.ReactNode
+}
+
+const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
   const classes = useStyles({})
 
   return (
@@ -37,9 +47,12 @@ const Layout: React.FC = ({ children }) => {
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.title}>
-            Random Monster Factory Clips
-          </Typography>
+          <Breadcrumbs className={classes.title}>
+            <Typography variant="h6" color="inherit">
+              Monster Factory
+            </Typography>
+            {breadcrumbs}
+          </Breadcrumbs>
           <Button
             color="default"
             variant="contained"
@@ -47,6 +60,7 @@ const Layout: React.FC = ({ children }) => {
               Router.push("/clips/random")
             }}
           >
+            <AutorenewIcon className={classes.icon} />
             Another!
           </Button>
         </Toolbar>
