@@ -22,7 +22,6 @@ export type Clip = {
 export type Query = {
   __typename?: "Query"
   videos: Array<Video>
-  clips: Array<Clip>
   clip: Clip
   randomClip: Clip
 }

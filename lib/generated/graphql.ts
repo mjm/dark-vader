@@ -24,7 +24,6 @@ export type Clip = {
 export type Query = {
   __typename?: "Query"
   videos: Array<Video>
-  clips: Array<Clip>
   clip: Clip
   randomClip: Clip
 }
@@ -150,7 +149,6 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = {
   videos?: Resolver<Array<ResolversTypes["Video"]>, ParentType, ContextType>
-  clips?: Resolver<Array<ResolversTypes["Clip"]>, ParentType, ContextType>
   clip?: Resolver<
     ResolversTypes["Clip"],
     ParentType,
