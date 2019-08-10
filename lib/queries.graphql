@@ -2,6 +2,7 @@ query GetClip($id: ID!) {
   clip(id: $id) {
     id
     video {
+      id
       name
       videoID
     }

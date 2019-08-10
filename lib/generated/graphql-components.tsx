@@ -46,7 +46,7 @@ export type GetClipQueryVariables = {
 
 export type GetClipQuery = { __typename?: "Query" } & {
   clip: { __typename?: "Clip" } & Pick<Clip, "id" | "start" | "quote"> & {
-      video: { __typename?: "Video" } & Pick<Video, "name" | "videoID">
+      video: { __typename?: "Video" } & Pick<Video, "id" | "name" | "videoID">
     }
 }
 
@@ -61,6 +61,7 @@ export const GetClipDocument = gql`
     clip(id: $id) {
       id
       video {
+        id
         name
         videoID
       }
