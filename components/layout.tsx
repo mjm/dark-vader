@@ -8,7 +8,6 @@ import {
   createStyles,
   Button,
   CssBaseline,
-  Paper,
   Breadcrumbs,
   Box,
   Link

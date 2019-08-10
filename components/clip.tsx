@@ -8,6 +8,7 @@ import {
   CardContent
 } from "@material-ui/core"
 import YouTube from "react-youtube"
+import Markdown from "react-markdown"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,7 +42,9 @@ export const Clip: React.FC<Props> = ({ clip }) => {
         }}
       />
       <CardContent className={classes.content}>
-        <Typography variant="body1">{clip.quote}</Typography>
+        <Typography variant="body1">
+          <Markdown source={clip.quote} />
+        </Typography>
       </CardContent>
     </Card>
   )
