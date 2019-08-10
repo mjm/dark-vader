@@ -1,5 +1,21 @@
-import { Box, Typography } from "@material-ui/core"
+import {
+  Box,
+  Typography,
+  Card,
+  Grid,
+  makeStyles,
+  Theme,
+  createStyles
+} from "@material-ui/core"
 import YouTube from "react-youtube"
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    quote: {
+      padding: theme.spacing(3)
+    }
+  })
+)
 
 interface Props {
   clip: any
@@ -7,7 +23,7 @@ interface Props {
 
 export const Clip: React.FC<Props> = ({ clip }) => {
   return (
-    <Box textAlign="center">
+    <Grid container direction="column" alignItems="center">
       <YouTube
         videoId={clip.video.videoID}
         opts={{
@@ -16,7 +32,19 @@ export const Clip: React.FC<Props> = ({ clip }) => {
           playerVars: { start: clip.start, autoplay: 1 }
         }}
       />
-      <Typography variant="body1">{clip.quote}</Typography>
+      <ClipQuote text={clip.quote} />
+    </Grid>
+  )
+}
+
+const ClipQuote: React.FC<{ text: string }> = ({ text }) => {
+  const classes = useStyles({})
+
+  return (
+    <Box maxWidth={720} mt={2}>
+      <Card className={classes.quote}>
+        <Typography variant="body1">{text}</Typography>
+      </Card>
     </Box>
   )
 }

@@ -18,10 +18,7 @@ import Head from "next/head"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
-      marginTop: theme.spacing(2)
-    },
-    paper: {
-      padding: theme.spacing(3)
+      marginTop: theme.spacing(3)
     },
     menuButton: {
       marginRight: theme.spacing(2)
@@ -69,9 +66,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Container className={classes.container}>
-        <Paper className={classes.paper}>{children}</Paper>
-      </Container>
+      <Container className={classes.container}>{children}</Container>
     </>
   )
 }
