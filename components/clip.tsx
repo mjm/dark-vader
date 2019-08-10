@@ -1,18 +1,23 @@
 import {
-  Box,
   Typography,
   Card,
-  Grid,
   makeStyles,
   Theme,
-  createStyles
+  createStyles,
+  CardMedia,
+  CardContent
 } from "@material-ui/core"
 import YouTube from "react-youtube"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    quote: {
-      padding: theme.spacing(3)
+    card: {
+      width: 720,
+      marginLeft: "auto",
+      marginRight: "auto"
+    },
+    content: {
+      paddingTop: theme.spacing(3)
     }
   })
 )
@@ -22,9 +27,12 @@ interface Props {
 }
 
 export const Clip: React.FC<Props> = ({ clip }) => {
+  const classes = useStyles({})
+
   return (
-    <Grid container direction="column" alignItems="center">
-      <YouTube
+    <Card className={classes.card}>
+      <CardMedia
+        component={YouTube}
         videoId={clip.video.videoID}
         opts={{
           width: "720",
@@ -32,19 +40,9 @@ export const Clip: React.FC<Props> = ({ clip }) => {
           playerVars: { start: clip.start, autoplay: 1 }
         }}
       />
-      <ClipQuote text={clip.quote} />
-    </Grid>
-  )
-}
-
-const ClipQuote: React.FC<{ text: string }> = ({ text }) => {
-  const classes = useStyles({})
-
-  return (
-    <Box maxWidth={720} mt={2}>
-      <Card className={classes.quote}>
-        <Typography variant="body1">{text}</Typography>
-      </Card>
-    </Box>
+      <CardContent className={classes.content}>
+        <Typography variant="body1">{clip.quote}</Typography>
+      </CardContent>
+    </Card>
   )
 }
