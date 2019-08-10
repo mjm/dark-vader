@@ -5,6 +5,7 @@ import { useGetClipQuery } from "../../lib/generated/graphql-components"
 import { Clip } from "../../components/clip"
 import { Typography } from "@material-ui/core"
 import Layout from "../../components/layout"
+import Head from "next/head"
 
 interface Props {
   clipId: string
@@ -30,6 +31,9 @@ const ShowClip: NextPage<Props> = ({ clipId }) => {
         <Typography variant="subtitle1">{clip.video.name}</Typography>
       }
     >
+      <Head>
+        <title>Monster Factory: {clip.video.name}</title>
+      </Head>
       <Clip clip={clip} />
     </Layout>
   )

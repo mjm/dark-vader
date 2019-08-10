@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core"
 import AutorenewIcon from "@material-ui/icons/Autorenew"
 import Router from "next/router"
+import Head from "next/head"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +45,9 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
 
   return (
     <>
+      <Head>
+        <title>Monster Factory!</title>
+      </Head>
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>
