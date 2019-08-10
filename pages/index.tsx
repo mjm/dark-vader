@@ -1,26 +1,17 @@
-import React from "react"
-import Head from "../components/head"
 import { NextPage } from "next"
-import { Typography, Container } from "@material-ui/core"
-import YouTube from "react-youtube"
+import Router from "next/router"
 
-const Home: NextPage = () => (
-  <Container fixed>
-    <Head>
-      <title>Home</title>
-    </Head>
+const Home: NextPage = () => null
 
-    <Typography variant="h4">Random Monster Factory!</Typography>
-    <YouTube
-      videoId="TamwFUUd9Yk"
-      opts={{
-        width: "720",
-        height: "405",
-        playerVars: { start: 145 }
-      }}
-    />
-    <Typography variant="body1">Oh, you're a sunfish!</Typography>
-  </Container>
-)
+Home.getInitialProps = async ({ req, res }) => {
+  if (req) {
+    res.writeHead(301, { Location: "/clips/random" })
+    res.end()
+  } else {
+    Router.replace("/clips/random")
+  }
+
+  return {}
+}
 
 export default Home
