@@ -69,7 +69,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
       </AppBar>
       <Container className={classes.container}>
         {children}
-        <Box mt={6}>
+        <Box mt={6} mb={4}>
           <Typography variant="body2" color="textSecondary" align="center">
             Created by{" "}
             <Link
