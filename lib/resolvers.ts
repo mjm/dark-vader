@@ -87,9 +87,20 @@ export const Query: QueryResolvers = {
 }
 
 export const Clip: ClipResolvers = {
-  async video({ fields }) {
+  async video({ fields }, {}, { cache }) {
     const [videoID] = fields["Video"]
-    return ((await videos.find(videoID)) as unknown) as Airtable.Row<{}>
+
+    return await cache.getOrCache(
+      ["videos", videoID],
+      async () => {
+        const video = await videos.find(videoID)
+        return (video as unknown) as Airtable.Row<{}>
+      },
+      {
+        expire: true,
+        extraKeys: video => [["videos", "ytid", video.fields["Video ID"]]]
+      }
+    )
   },
 
   start({ fields }) {
@@ -126,13 +137,19 @@ export const Video: VideoResolvers = {
     return fields["Published"]
   },
 
-  async clips({ fields }) {
+  async clips({ fields }, {}, { cache }) {
     const videoID = fields["Video ID"]
-    return (await clips
-      .select({
-        filterByFormula: `{Video} = '${videoID}'`,
-        sort: [{ field: "Start Time", direction: "asc" }]
-      })
-      .all()) as Airtable.Row<{}>[]
+    return await cache.getOrCache(
+      ["clips", videoID],
+      async () => {
+        return (await clips
+          .select({
+            filterByFormula: `{Video} = '${videoID}'`,
+            sort: [{ field: "Start Time", direction: "asc" }]
+          })
+          .all()) as Airtable.Row<{}>[]
+      },
+      { expire: true }
+    )
   }
 }
