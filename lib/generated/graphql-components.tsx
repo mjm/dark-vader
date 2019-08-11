@@ -22,8 +22,13 @@ export type Clip = {
 export type Query = {
   __typename?: "Query"
   videos: Array<Video>
+  video: Video
   clip: Clip
   randomClip: Clip
+}
+
+export type QueryVideoArgs = {
+  id: Scalars["ID"]
 }
 
 export type QueryClipArgs = {
@@ -39,15 +44,14 @@ export type Video = {
   game?: Maybe<Scalars["String"]>
   monsterName?: Maybe<Scalars["String"]>
   published?: Maybe<Scalars["String"]>
+  clips: Array<Clip>
 }
 export type GetClipQueryVariables = {
   id: Scalars["ID"]
 }
 
 export type GetClipQuery = { __typename?: "Query" } & {
-  clip: { __typename?: "Clip" } & Pick<Clip, "id" | "start" | "quote"> & {
-      video: { __typename?: "Video" } & Pick<Video, "id" | "name" | "videoID">
-    }
+  clip: { __typename?: "Clip" } & ClipDetailsFragment
 }
 
 export type GetRandomClipQueryVariables = {}
@@ -56,19 +60,68 @@ export type GetRandomClipQuery = { __typename?: "Query" } & {
   randomClip: { __typename?: "Clip" } & Pick<Clip, "id">
 }
 
-export const GetClipDocument = gql`
-  query GetClip($id: ID!) {
-    clip(id: $id) {
+export type GetVideoQueryVariables = {
+  id: Scalars["ID"]
+}
+
+export type GetVideoQuery = { __typename?: "Query" } & {
+  video: { __typename?: "Video" } & VideoDetailsFragment
+}
+
+export type BasicVideoDetailsFragment = { __typename?: "Video" } & Pick<
+  Video,
+  "id" | "name" | "videoID"
+>
+
+export type VideoDetailsFragment = { __typename?: "Video" } & Pick<
+  Video,
+  "monsterName" | "published"
+> & {
+    clips: Array<{ __typename?: "Clip" } & Pick<Clip, "id" | "start" | "quote">>
+  } & BasicVideoDetailsFragment
+
+export type ClipDetailsFragment = { __typename?: "Clip" } & Pick<
+  Clip,
+  "id" | "start" | "quote"
+> & { video: { __typename?: "Video" } & BasicVideoDetailsFragment }
+export const BasicVideoDetailsFragmentDoc = gql`
+  fragment basicVideoDetails on Video {
+    id
+    name
+    videoID
+  }
+`
+export const VideoDetailsFragmentDoc = gql`
+  fragment videoDetails on Video {
+    ...basicVideoDetails
+    monsterName
+    published
+    clips {
       id
-      video {
-        id
-        name
-        videoID
-      }
       start
       quote
     }
   }
+  ${BasicVideoDetailsFragmentDoc}
+`
+export const ClipDetailsFragmentDoc = gql`
+  fragment clipDetails on Clip {
+    id
+    video {
+      ...basicVideoDetails
+    }
+    start
+    quote
+  }
+  ${BasicVideoDetailsFragmentDoc}
+`
+export const GetClipDocument = gql`
+  query GetClip($id: ID!) {
+    clip(id: $id) {
+      ...clipDetails
+    }
+  }
+  ${ClipDetailsFragmentDoc}
 `
 
 export function useGetClipQuery(
@@ -112,4 +165,29 @@ export type GetRandomClipQueryHookResult = ReturnType<
 export type GetRandomClipQueryResult = ApolloReactCommon.QueryResult<
   GetRandomClipQuery,
   GetRandomClipQueryVariables
+>
+export const GetVideoDocument = gql`
+  query GetVideo($id: ID!) {
+    video(id: $id) {
+      ...videoDetails
+    }
+  }
+  ${VideoDetailsFragmentDoc}
+`
+
+export function useGetVideoQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetVideoQuery,
+    GetVideoQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<GetVideoQuery, GetVideoQueryVariables>(
+    GetVideoDocument,
+    baseOptions
+  )
+}
+export type GetVideoQueryHookResult = ReturnType<typeof useGetVideoQuery>
+export type GetVideoQueryResult = ApolloReactCommon.QueryResult<
+  GetVideoQuery,
+  GetVideoQueryVariables
 >

@@ -3,10 +3,11 @@ import { NextPage } from "next"
 import withData from "../../components/apollo"
 import { useGetClipQuery } from "../../lib/generated/graphql-components"
 import { Clip } from "../../components/clip"
-import { Typography } from "@material-ui/core"
+import { Typography, Link } from "@material-ui/core"
 import Layout from "../../components/layout"
 import Head from "next/head"
 import { useRouter } from "next/router"
+import NextLink from "next/link"
 
 const ShowClip: NextPage = () => {
   const router = useRouter()
@@ -28,7 +29,15 @@ const ShowClip: NextPage = () => {
   return (
     <Layout
       breadcrumbs={
-        <Typography variant="subtitle1">{clip.video.name}</Typography>
+        <NextLink
+          href="/videos/[videoId]"
+          as={`/videos/${clip.video.id}`}
+          passHref
+        >
+          <Link color="inherit">
+            <Typography variant="subtitle1">{clip.video.name}</Typography>
+          </Link>
+        </NextLink>
       }
     >
       <Head>

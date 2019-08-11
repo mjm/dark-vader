@@ -24,8 +24,13 @@ export type Clip = {
 export type Query = {
   __typename?: "Query"
   videos: Array<Video>
+  video: Video
   clip: Clip
   randomClip: Clip
+}
+
+export type QueryVideoArgs = {
+  id: Scalars["ID"]
 }
 
 export type QueryClipArgs = {
@@ -41,6 +46,7 @@ export type Video = {
   game?: Maybe<Scalars["String"]>
   monsterName?: Maybe<Scalars["String"]>
   published?: Maybe<Scalars["String"]>
+  clips: Array<Clip>
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -149,6 +155,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = {
   videos?: Resolver<Array<ResolversTypes["Video"]>, ParentType, ContextType>
+  video?: Resolver<
+    ResolversTypes["Video"],
+    ParentType,
+    ContextType,
+    QueryVideoArgs
+  >
   clip?: Resolver<
     ResolversTypes["Clip"],
     ParentType,
@@ -173,6 +185,7 @@ export type VideoResolvers<
     ContextType
   >
   published?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>
+  clips?: Resolver<Array<ResolversTypes["Clip"]>, ParentType, ContextType>
 }
 
 export type Resolvers<ContextType = any> = {

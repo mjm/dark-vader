@@ -4,11 +4,11 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  CardMedia,
   CardContent
 } from "@material-ui/core"
-import YouTube from "react-youtube"
 import Markdown from "react-markdown"
+import { VideoCardMedia } from "./video"
+import { ClipDetailsFragment } from "../lib/generated/graphql-components"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  clip: any
+  clip: ClipDetailsFragment
 }
 
 export const Clip: React.FC<Props> = ({ clip }) => {
@@ -32,15 +32,7 @@ export const Clip: React.FC<Props> = ({ clip }) => {
 
   return (
     <Card className={classes.card}>
-      <CardMedia
-        component={YouTube}
-        videoId={clip.video.videoID}
-        opts={{
-          width: "720",
-          height: "405",
-          playerVars: { start: clip.start, autoplay: 1 }
-        }}
-      />
+      <VideoCardMedia video={clip.video} autoplay start={clip.start} />
       <CardContent className={classes.content}>
         <Typography variant="body1">
           <Markdown source={clip.quote} />

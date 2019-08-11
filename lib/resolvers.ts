@@ -14,6 +14,11 @@ export const Query: QueryResolvers = {
       .all()) as Airtable.Row<{}>[]
   },
 
+  async video(_, { id }) {
+    const video = await videos.find(id)
+    return (video as unknown) as Airtable.Row<{}>
+  },
+
   async clip(_, { id }) {
     const clip = await clips.find(id)
     return (clip as unknown) as Airtable.Row<{}>
@@ -81,5 +86,12 @@ export const Video: VideoResolvers = {
 
   published({ fields }) {
     return fields["Published"]
+  },
+
+  async clips({ fields }) {
+    const videoID = fields["Video ID"]
+    return (await clips
+      .select({ filterByFormula: `{Video} = '${videoID}'` })
+      .all()) as Airtable.Row<{}>[]
   }
 }

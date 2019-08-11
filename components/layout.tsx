@@ -63,7 +63,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
             }}
           >
             <AutorenewIcon className={classes.icon} />
-            Another!
+            Random Clip!
           </Button>
         </Toolbar>
       </AppBar>

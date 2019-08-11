@@ -1,13 +1,6 @@
 query GetClip($id: ID!) {
   clip(id: $id) {
-    id
-    video {
-      id
-      name
-      videoID
-    }
-    start
-    quote
+    ...clipDetails
   }
 }
 
@@ -15,4 +8,36 @@ query GetRandomClip {
   randomClip {
     id
   }
+}
+
+query GetVideo($id: ID!) {
+  video(id: $id) {
+    ...videoDetails
+  }
+}
+
+fragment basicVideoDetails on Video {
+  id
+  name
+  videoID
+}
+
+fragment videoDetails on Video {
+  ...basicVideoDetails
+  monsterName
+  published
+  clips {
+    id
+    start
+    quote
+  }
+}
+
+fragment clipDetails on Clip {
+  id
+  video {
+    ...basicVideoDetails
+  }
+  start
+  quote
 }
