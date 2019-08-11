@@ -6,14 +6,14 @@ import { Clip } from "../../components/clip"
 import { Typography } from "@material-ui/core"
 import Layout from "../../components/layout"
 import Head from "next/head"
+import { useRouter } from "next/router"
 
-interface Props {
-  clipId: string
-}
+const ShowClip: NextPage = () => {
+  const router = useRouter()
+  const { clipId } = router.query
 
-const ShowClip: NextPage<Props> = ({ clipId }) => {
   const { loading, error, data } = useGetClipQuery({
-    variables: { id: clipId }
+    variables: { id: clipId as string }
   })
 
   if (loading) {
@@ -37,11 +37,6 @@ const ShowClip: NextPage<Props> = ({ clipId }) => {
       <Clip clip={clip} />
     </Layout>
   )
-}
-
-ShowClip.getInitialProps = async ({ query }): Promise<Props> => {
-  // @ts-ignore
-  return { clipId: query.clipId }
 }
 
 export default withData(ShowClip)
