@@ -20,35 +20,67 @@ export const Query: QueryResolvers = {
     )
   },
 
-  async video(_, { id }) {
-    const video = await videos.find(id)
-    return (video as unknown) as Airtable.Row<{}>
+  async video(_, { id }, { cache }) {
+    return await cache.getOrCache(
+      ["videos", id],
+      async () => {
+        const video = await videos.find(id)
+        return (video as unknown) as Airtable.Row<{}>
+      },
+      {
+        expire: true,
+        extraKeys: video => [["videos", "ytid", video.fields["Video ID"]]]
+      }
+    )
   },
 
-  async clip(_, { id }) {
-    const clip = await clips.find(id)
-    return (clip as unknown) as Airtable.Row<{}>
+  async clip(_, { id }, { cache }) {
+    return await cache.getOrCache(
+      ["clips", id],
+      async () => {
+        const clip = await clips.find(id)
+        return (clip as unknown) as Airtable.Row<{}>
+      },
+      { expire: true, extraKeys: clip => [["clips", "id", clip.fields["ID"]]] }
+    )
   },
 
-  async randomClip() {
-    const highestIDClips = await clips
-      .select({
-        sort: [{ field: "ID", direction: "desc" }],
-        maxRecords: 1
-      })
-      .firstPage()
-    const highestID = highestIDClips[0].fields["ID"]
-
-    while (true) {
-      const randomID = Math.floor(Math.random() * Math.floor(highestID)) + 1
-      const clipArray = await clips
+  async randomClip(_, {}, { cache }) {
+    const highestID = await cache.getOrCache("highest-id", async () => {
+      const highestIDClips = await clips
         .select({
-          filterByFormula: `{ID} = ${randomID}`,
+          sort: [{ field: "ID", direction: "desc" }],
           maxRecords: 1
         })
         .firstPage()
-      if (clipArray.length) {
-        return clipArray[0]
+      return highestIDClips[0].fields["ID"] as number
+    })
+
+    while (true) {
+      const randomID = Math.floor(Math.random() * Math.floor(highestID)) + 1
+
+      const clip = await cache.getOrCache(
+        ["clips", "id", `${randomID}`],
+        async () => {
+          const clipArray = await clips
+            .select({
+              filterByFormula: `{ID} = ${randomID}`,
+              maxRecords: 1
+            })
+            .firstPage()
+          if (clipArray.length) {
+            return clipArray[0]
+          } else {
+            return "not-found"
+          }
+        },
+        {
+          expire: true,
+          extraKeys: clip => (clip === "not-found" ? [] : [["clips", clip.id]])
+        }
+      )
+      if (clip !== "not-found") {
+        return clip
       }
     }
   }
