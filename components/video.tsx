@@ -8,7 +8,10 @@ import {
   CardContent
 } from "@material-ui/core"
 import YouTube, { PlayerVars } from "react-youtube"
-import { BasicVideoDetailsFragment } from "../lib/generated/graphql-components"
+import {
+  BasicVideoDetailsFragment,
+  VideoDetailsFragment
+} from "../lib/generated/graphql-components"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  video: BasicVideoDetailsFragment
+  video: VideoDetailsFragment
 }
 
 export const Video: React.FC<Props> = ({ video }) => {
@@ -34,7 +37,8 @@ export const Video: React.FC<Props> = ({ video }) => {
     <Card className={classes.card}>
       <VideoCardMedia video={video} />
       <CardContent className={classes.content}>
-        <Typography variant="body1">Foo bar</Typography>
+        <Typography variant="subtitle2">Published {video.published}</Typography>
+        <Typography variant="body1">Starring {video.monsterName}</Typography>
       </CardContent>
     </Card>
   )

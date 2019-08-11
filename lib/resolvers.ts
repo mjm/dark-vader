@@ -91,7 +91,10 @@ export const Video: VideoResolvers = {
   async clips({ fields }) {
     const videoID = fields["Video ID"]
     return (await clips
-      .select({ filterByFormula: `{Video} = '${videoID}'` })
+      .select({
+        filterByFormula: `{Video} = '${videoID}'`,
+        sort: [{ field: "Start Time", direction: "asc" }]
+      })
       .all()) as Airtable.Row<{}>[]
   }
 }

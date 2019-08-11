@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  breadcrumbs?: React.ReactNode
+  breadcrumbs?: React.ReactNode | React.ReactNode[]
 }
 
 const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {

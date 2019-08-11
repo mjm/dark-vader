@@ -77,18 +77,29 @@ export type VideoDetailsFragment = { __typename?: "Video" } & Pick<
   Video,
   "monsterName" | "published"
 > & {
-    clips: Array<{ __typename?: "Clip" } & Pick<Clip, "id" | "start" | "quote">>
+    clips: Array<{ __typename?: "Clip" } & BasicClipDetailsFragment>
   } & BasicVideoDetailsFragment
 
-export type ClipDetailsFragment = { __typename?: "Clip" } & Pick<
+export type BasicClipDetailsFragment = { __typename?: "Clip" } & Pick<
   Clip,
   "id" | "start" | "quote"
-> & { video: { __typename?: "Video" } & BasicVideoDetailsFragment }
+>
+
+export type ClipDetailsFragment = { __typename?: "Clip" } & {
+  video: { __typename?: "Video" } & BasicVideoDetailsFragment
+} & BasicClipDetailsFragment
 export const BasicVideoDetailsFragmentDoc = gql`
   fragment basicVideoDetails on Video {
     id
     name
     videoID
+  }
+`
+export const BasicClipDetailsFragmentDoc = gql`
+  fragment basicClipDetails on Clip {
+    id
+    start
+    quote
   }
 `
 export const VideoDetailsFragmentDoc = gql`
@@ -97,22 +108,20 @@ export const VideoDetailsFragmentDoc = gql`
     monsterName
     published
     clips {
-      id
-      start
-      quote
+      ...basicClipDetails
     }
   }
   ${BasicVideoDetailsFragmentDoc}
+  ${BasicClipDetailsFragmentDoc}
 `
 export const ClipDetailsFragmentDoc = gql`
   fragment clipDetails on Clip {
-    id
+    ...basicClipDetails
     video {
       ...basicVideoDetails
     }
-    start
-    quote
   }
+  ${BasicClipDetailsFragmentDoc}
   ${BasicVideoDetailsFragmentDoc}
 `
 export const GetClipDocument = gql`

@@ -28,7 +28,7 @@ const ShowClip: NextPage = () => {
   const clip = data.clip
   return (
     <Layout
-      breadcrumbs={
+      breadcrumbs={[
         <NextLink
           href="/videos/[videoId]"
           as={`/videos/${clip.video.id}`}
@@ -37,8 +37,9 @@ const ShowClip: NextPage = () => {
           <Link color="inherit">
             <Typography variant="subtitle1">{clip.video.name}</Typography>
           </Link>
-        </NextLink>
-      }
+        </NextLink>,
+        <Typography variant="subtitle1">Clip</Typography>
+      ]}
     >
       <Head>
         <title>Monster Factory: {clip.video.name}</title>

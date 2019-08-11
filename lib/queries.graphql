@@ -27,17 +27,19 @@ fragment videoDetails on Video {
   monsterName
   published
   clips {
-    id
-    start
-    quote
+    ...basicClipDetails
   }
 }
 
-fragment clipDetails on Clip {
+fragment basicClipDetails on Clip {
   id
+  start
+  quote
+}
+
+fragment clipDetails on Clip {
+  ...basicClipDetails
   video {
     ...basicVideoDetails
   }
-  start
-  quote
 }
