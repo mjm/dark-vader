@@ -1,5 +1,5 @@
 import { NextPage } from "next"
-import { useRouter } from "next/router"
+import { Router } from "next/router"
 import {
   useGetVideoQuery,
   BasicClipDetailsFragment
@@ -34,9 +34,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const ShowVideo: NextPage = () => {
-  const router = useRouter()
-  const { videoId } = router.query
+const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
+  const { videoId } = query
 
   const { loading, error, data } = useGetVideoQuery({
     variables: { id: videoId as string }
@@ -64,6 +63,10 @@ const ShowVideo: NextPage = () => {
       <ClipList clips={video.clips} />
     </Layout>
   )
+}
+
+ShowVideo.getInitialProps = async ({ query }) => {
+  return { query }
 }
 
 export default withData(ShowVideo)

@@ -6,12 +6,11 @@ import { Clip } from "../../components/clip"
 import { Typography, Link } from "@material-ui/core"
 import Layout from "../../components/layout"
 import Head from "next/head"
-import { useRouter } from "next/router"
+import { Router } from "next/router"
 import NextLink from "next/link"
 
-const ShowClip: NextPage = () => {
-  const router = useRouter()
-  const { clipId } = router.query
+const ShowClip: NextPage<{ query: Router["query"] }> = ({ query }) => {
+  const { clipId } = query
 
   const { loading, error, data } = useGetClipQuery({
     variables: { id: clipId as string }
@@ -47,6 +46,10 @@ const ShowClip: NextPage = () => {
       <Clip clip={clip} />
     </Layout>
   )
+}
+
+ShowClip.getInitialProps = async ({ query }) => {
+  return { query }
 }
 
 export default withData(ShowClip)
