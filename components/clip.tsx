@@ -34,7 +34,7 @@ export const Clip: React.FC<Props> = ({ clip }) => {
     <Card className={classes.card}>
       <VideoCardMedia video={clip.video} autoplay start={clip.start} />
       <CardContent className={classes.content}>
-        <Typography variant="body1">
+        <Typography variant="body1" component="div">
           <Markdown source={clip.quote} />
         </Typography>
       </CardContent>

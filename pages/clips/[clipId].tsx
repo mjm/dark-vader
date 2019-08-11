@@ -29,6 +29,7 @@ const ShowClip: NextPage<{ query: Router["query"] }> = ({ query }) => {
     <Layout
       breadcrumbs={[
         <NextLink
+          key="video"
           href="/videos/[videoId]"
           as={`/videos/${clip.video.id}`}
           passHref
@@ -37,7 +38,9 @@ const ShowClip: NextPage<{ query: Router["query"] }> = ({ query }) => {
             <Typography variant="subtitle1">{clip.video.name}</Typography>
           </Link>
         </NextLink>,
-        <Typography variant="subtitle1">Clip</Typography>
+        <Typography key="clip" variant="subtitle1">
+          Clip
+        </Typography>
       ]}
     >
       <Head>
