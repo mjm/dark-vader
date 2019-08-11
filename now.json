@@ -2,6 +2,7 @@
   "version": 2,
   "name": "dark-vader",
   "env": {
-    "AIRTABLE_API_KEY": "@airtable-api-key"
+    "AIRTABLE_API_KEY": "@airtable-api-key",
+    "REDIS_URL": "@dark-vader-redis-url"
   }
 }

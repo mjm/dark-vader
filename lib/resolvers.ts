@@ -6,12 +6,18 @@ import {
 import { videos, clips } from "./airtable"
 
 export const Query: QueryResolvers = {
-  async videos() {
-    return (await videos
-      .select({
-        sort: [{ field: "Published", direction: "asc" }]
-      })
-      .all()) as Airtable.Row<{}>[]
+  async videos(_, {}, { cache }) {
+    return await cache.getOrCache(
+      "videos",
+      async () => {
+        return (await videos
+          .select({
+            sort: [{ field: "Published", direction: "asc" }]
+          })
+          .all()) as Airtable.Row<{}>[]
+      },
+      { expire: true }
+    )
   },
 
   async video(_, { id }) {

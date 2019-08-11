@@ -6,10 +6,12 @@ generates:
     plugins:
       - add: "import Airtable from 'airtable'"
       - add: "type AirtableRow = Airtable.Row<{}>"
+      - add: "import { Cache } from '../cache'"
       - add: "export type EnumMap<T extends string, U> = { [K in T]: U }"
       - "typescript"
       - "typescript-resolvers"
     config:
+      contextType: "{ cache: Cache }"
       scalars:
         Cursor: string
       mappers:

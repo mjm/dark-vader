@@ -1,4 +1,5 @@
 import Airtable from "airtable"
+import { Cache } from "../cache"
 import { GraphQLResolveInfo } from "graphql"
 type AirtableRow = Airtable.Row<{}>
 export type EnumMap<T extends string, U> = { [K in T]: U }
@@ -141,7 +142,7 @@ export type ResolversParentTypes = {
 }
 
 export type ClipResolvers<
-  ContextType = any,
+  ContextType = { cache: Cache },
   ParentType extends ResolversParentTypes["Clip"] = ResolversParentTypes["Clip"]
 > = {
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>
@@ -151,7 +152,7 @@ export type ClipResolvers<
 }
 
 export type QueryResolvers<
-  ContextType = any,
+  ContextType = { cache: Cache },
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = {
   videos?: Resolver<Array<ResolversTypes["Video"]>, ParentType, ContextType>
@@ -171,7 +172,7 @@ export type QueryResolvers<
 }
 
 export type VideoResolvers<
-  ContextType = any,
+  ContextType = { cache: Cache },
   ParentType extends ResolversParentTypes["Video"] = ResolversParentTypes["Video"]
 > = {
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>
@@ -188,7 +189,7 @@ export type VideoResolvers<
   clips?: Resolver<Array<ResolversTypes["Clip"]>, ParentType, ContextType>
 }
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = { cache: Cache }> = {
   Clip?: ClipResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
   Video?: VideoResolvers<ContextType>
@@ -198,4 +199,4 @@ export type Resolvers<ContextType = any> = {
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
  */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>
+export type IResolvers<ContextType = { cache: Cache }> = Resolvers<ContextType>
