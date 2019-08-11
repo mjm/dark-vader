@@ -29,7 +29,7 @@ export class Cache {
     options.extraKeys = options.extraKeys || []
     if (options.expire) {
       if (!(typeof options.expire === "number")) {
-        options.expire = 300 // 5 minute
+        options.expire = 900 // 15 minute
       }
 
       await this.redis.set(key, value, "EX", options.expire)
