@@ -57,6 +57,24 @@ export class Cache {
     return JSON.parse(value)
   }
 
+  async refresh(key: KeyType, options: CacheSetOptions = {}): Promise<void> {
+    if (!options.expire) {
+      return
+    }
+
+    key = normalizeKey(key)
+    console.log("cache refresh", key)
+
+    if (!(typeof options.expire === "number")) {
+      options.expire = 900 // 15 minute
+    }
+
+    await this.redis.expire(key, options.expire)
+    for (const extraKey of options.extraKeys) {
+      await this.redis.expire(normalizeKey(extraKey), options.expire)
+    }
+  }
+
   async getOrCache<T>(
     key: KeyType,
     creator: () => Promise<T>,
@@ -64,6 +82,8 @@ export class Cache {
   ): Promise<T> {
     const value = await this.get(key)
     if (value) {
+      const extraKeys = options.extraKeys ? options.extraKeys(value) : []
+      await this.refresh(key, { ...options, extraKeys })
       return value
     }
 
