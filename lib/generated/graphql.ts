@@ -14,12 +14,32 @@ export type Scalars = {
   Cursor: string
 }
 
+export type AddProposedClipInput = {
+  videoID: Scalars["ID"]
+  start: Scalars["Int"]
+  quote: Scalars["String"]
+}
+
+export type AddProposedClipPayload = {
+  __typename?: "AddProposedClipPayload"
+  id: Scalars["ID"]
+}
+
 export type Clip = {
   __typename?: "Clip"
   id: Scalars["ID"]
   video: Video
   start: Scalars["Int"]
   quote: Scalars["String"]
+}
+
+export type Mutation = {
+  __typename?: "Mutation"
+  addProposedClip: AddProposedClipPayload
+}
+
+export type MutationAddProposedClipArgs = {
+  input: AddProposedClipInput
 }
 
 export type Query = {
@@ -127,6 +147,9 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars["String"]>
   Clip: ResolverTypeWrapper<AirtableRow>
   Int: ResolverTypeWrapper<Scalars["Int"]>
+  Mutation: ResolverTypeWrapper<{}>
+  AddProposedClipInput: AddProposedClipInput
+  AddProposedClipPayload: ResolverTypeWrapper<AddProposedClipPayload>
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>
 }
 
@@ -138,7 +161,17 @@ export type ResolversParentTypes = {
   String: Scalars["String"]
   Clip: AirtableRow
   Int: Scalars["Int"]
+  Mutation: {}
+  AddProposedClipInput: AddProposedClipInput
+  AddProposedClipPayload: AddProposedClipPayload
   Boolean: Scalars["Boolean"]
+}
+
+export type AddProposedClipPayloadResolvers<
+  ContextType = { cache: Cache },
+  ParentType extends ResolversParentTypes["AddProposedClipPayload"] = ResolversParentTypes["AddProposedClipPayload"]
+> = {
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>
 }
 
 export type ClipResolvers<
@@ -149,6 +182,18 @@ export type ClipResolvers<
   video?: Resolver<ResolversTypes["Video"], ParentType, ContextType>
   start?: Resolver<ResolversTypes["Int"], ParentType, ContextType>
   quote?: Resolver<ResolversTypes["String"], ParentType, ContextType>
+}
+
+export type MutationResolvers<
+  ContextType = { cache: Cache },
+  ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
+> = {
+  addProposedClip?: Resolver<
+    ResolversTypes["AddProposedClipPayload"],
+    ParentType,
+    ContextType,
+    MutationAddProposedClipArgs
+  >
 }
 
 export type QueryResolvers<
@@ -190,7 +235,9 @@ export type VideoResolvers<
 }
 
 export type Resolvers<ContextType = { cache: Cache }> = {
+  AddProposedClipPayload?: AddProposedClipPayloadResolvers<ContextType>
   Clip?: ClipResolvers<ContextType>
+  Mutation?: MutationResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
   Video?: VideoResolvers<ContextType>
 }

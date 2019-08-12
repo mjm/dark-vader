@@ -11,12 +11,32 @@ export type Scalars = {
   Float: number
 }
 
+export type AddProposedClipInput = {
+  videoID: Scalars["ID"]
+  start: Scalars["Int"]
+  quote: Scalars["String"]
+}
+
+export type AddProposedClipPayload = {
+  __typename?: "AddProposedClipPayload"
+  id: Scalars["ID"]
+}
+
 export type Clip = {
   __typename?: "Clip"
   id: Scalars["ID"]
   video: Video
   start: Scalars["Int"]
   quote: Scalars["String"]
+}
+
+export type Mutation = {
+  __typename?: "Mutation"
+  addProposedClip: AddProposedClipPayload
+}
+
+export type MutationAddProposedClipArgs = {
+  input: AddProposedClipInput
 }
 
 export type Query = {
@@ -88,6 +108,17 @@ export type BasicClipDetailsFragment = { __typename?: "Clip" } & Pick<
 export type ClipDetailsFragment = { __typename?: "Clip" } & {
   video: { __typename?: "Video" } & BasicVideoDetailsFragment
 } & BasicClipDetailsFragment
+
+export type AddProposedClipMutationVariables = {
+  input: AddProposedClipInput
+}
+
+export type AddProposedClipMutation = { __typename?: "Mutation" } & {
+  addProposedClip: { __typename?: "AddProposedClipPayload" } & Pick<
+    AddProposedClipPayload,
+    "id"
+  >
+}
 export const BasicVideoDetailsFragmentDoc = gql`
   fragment basicVideoDetails on Video {
     id
@@ -199,4 +230,37 @@ export type GetVideoQueryHookResult = ReturnType<typeof useGetVideoQuery>
 export type GetVideoQueryResult = ApolloReactCommon.QueryResult<
   GetVideoQuery,
   GetVideoQueryVariables
+>
+export const AddProposedClipDocument = gql`
+  mutation AddProposedClip($input: AddProposedClipInput!) {
+    addProposedClip(input: $input) {
+      id
+    }
+  }
+`
+export type AddProposedClipMutationFn = ApolloReactCommon.MutationFunction<
+  AddProposedClipMutation,
+  AddProposedClipMutationVariables
+>
+
+export function useAddProposedClipMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AddProposedClipMutation,
+    AddProposedClipMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    AddProposedClipMutation,
+    AddProposedClipMutationVariables
+  >(AddProposedClipDocument, baseOptions)
+}
+export type AddProposedClipMutationHookResult = ReturnType<
+  typeof useAddProposedClipMutation
+>
+export type AddProposedClipMutationResult = ApolloReactCommon.MutationResult<
+  AddProposedClipMutation
+>
+export type AddProposedClipMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AddProposedClipMutation,
+  AddProposedClipMutationVariables
 >

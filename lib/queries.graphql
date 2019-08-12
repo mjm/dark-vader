@@ -43,3 +43,9 @@ fragment clipDetails on Clip {
     ...basicVideoDetails
   }
 }
+
+mutation AddProposedClip($input: AddProposedClipInput!) {
+  addProposedClip(input: $input) {
+    id
+  }
+}

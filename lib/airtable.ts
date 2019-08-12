@@ -4,3 +4,4 @@ const base = new Airtable().base("appMFtJSYaRi5uoUO")
 
 export const videos = base("Videos")
 export const clips = base("Clips")
+export const proposedClips = base("Proposed Clips")

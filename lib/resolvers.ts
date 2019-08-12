@@ -1,9 +1,10 @@
 import {
   QueryResolvers,
   VideoResolvers,
-  ClipResolvers
+  ClipResolvers,
+  MutationResolvers
 } from "./generated/graphql"
-import { videos, clips } from "./airtable"
+import { videos, clips, proposedClips } from "./airtable"
 
 export const Query: QueryResolvers = {
   async videos(_, {}, { cache }) {
@@ -83,6 +84,18 @@ export const Query: QueryResolvers = {
         return clip
       }
     }
+  }
+}
+
+export const Mutation: MutationResolvers = {
+  async addProposedClip(_, { input }) {
+    const clip = ((await proposedClips.create({
+      Video: [input.videoID],
+      "Start Time": input.start,
+      "Quote Text": input.quote
+    })) as unknown) as Airtable.Row<{}>
+
+    return { id: clip.id }
   }
 }
 
