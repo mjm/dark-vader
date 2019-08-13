@@ -1,3 +1,4 @@
+import React from "react"
 import {
   Typography,
   Card,
@@ -28,14 +29,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   video: VideoDetailsFragment
+  onTimeChange?: (time: number) => void
 }
 
-export const Video: React.FC<Props> = ({ video }) => {
+export const Video: React.FC<Props> = ({ video, onTimeChange }) => {
   const classes = useStyles({})
 
   return (
     <Card className={classes.card}>
-      <VideoCardMedia video={video} />
+      <VideoCardMedia video={video} onTimeChange={onTimeChange} />
       <CardContent className={classes.content}>
         <Typography variant="subtitle2">Published {video.published}</Typography>
         <Typography variant="body1">Starring {video.monsterName}</Typography>
@@ -48,13 +50,30 @@ interface VideoCardMediaProps {
   video: BasicVideoDetailsFragment
   autoplay?: boolean
   start?: number
+  onTimeChange?: (time: number) => void
 }
 
 export const VideoCardMedia: React.FC<VideoCardMediaProps> = ({
   video,
   autoplay,
-  start
+  start,
+  onTimeChange
 }) => {
+  const player = React.useRef<any>(null)
+
+  React.useEffect(() => {
+    if (onTimeChange) {
+      const interval = setInterval(() => {
+        if (player.current) {
+          const time = player.current.getCurrentTime()
+          onTimeChange(Math.floor(time))
+        }
+      })
+
+      return () => clearInterval(interval)
+    }
+  }, [onTimeChange])
+
   const playerVars: PlayerVars = { autoplay: autoplay ? 1 : 0 }
   if (start) {
     playerVars.start = start
@@ -64,10 +83,14 @@ export const VideoCardMedia: React.FC<VideoCardMediaProps> = ({
     <CardMedia
       component={YouTube}
       videoId={video.videoID}
+      image="foo"
       opts={{
         width: "720",
         height: "405",
         playerVars
+      }}
+      onReady={evt => {
+        player.current = evt.target
       }}
     />
   )
