@@ -47,15 +47,19 @@ export const Query: QueryResolvers = {
   },
 
   async randomClip(_, {}, { cache }) {
-    const highestID = await cache.getOrCache("highest-id", async () => {
-      const highestIDClips = await clips
-        .select({
-          sort: [{ field: "ID", direction: "desc" }],
-          maxRecords: 1
-        })
-        .firstPage()
-      return highestIDClips[0].fields["ID"] as number
-    })
+    const highestID = await cache.getOrCache(
+      "highest-id",
+      async () => {
+        const highestIDClips = await clips
+          .select({
+            sort: [{ field: "ID", direction: "desc" }],
+            maxRecords: 1
+          })
+          .firstPage()
+        return highestIDClips[0].fields["ID"] as number
+      },
+      { expire: true }
+    )
 
     while (true) {
       const randomID = Math.floor(Math.random() * Math.floor(highestID)) + 1
