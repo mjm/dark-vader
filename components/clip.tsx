@@ -9,6 +9,7 @@ import {
 import Markdown from "react-markdown"
 import { VideoCardMedia } from "./video"
 import { ClipDetailsFragment } from "../lib/generated/graphql-components"
+import { QuoteText } from "./quote"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +36,7 @@ export const Clip: React.FC<Props> = ({ clip }) => {
       <VideoCardMedia video={clip.video} autoplay start={clip.start} />
       <CardContent className={classes.content}>
         <Typography variant="body1" component="div">
-          <Markdown source={clip.quote} />
+          <QuoteText>{clip.quote}</QuoteText>
         </Typography>
       </CardContent>
     </Card>
