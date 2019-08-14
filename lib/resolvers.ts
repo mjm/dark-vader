@@ -17,7 +17,7 @@ export const Query: QueryResolvers = {
           })
           .all()) as Airtable.Row<{}>[]
       },
-      { expire: true }
+      { expire: 3600 }
     )
   },
 

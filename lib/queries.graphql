@@ -16,6 +16,12 @@ query GetVideo($id: ID!) {
   }
 }
 
+query AllVideos {
+  videos {
+    ...basicVideoDetails
+  }
+}
+
 fragment basicVideoDetails on Video {
   id
   name

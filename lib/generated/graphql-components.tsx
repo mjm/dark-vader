@@ -88,6 +88,12 @@ export type GetVideoQuery = { __typename?: "Query" } & {
   video: { __typename?: "Video" } & VideoDetailsFragment
 }
 
+export type AllVideosQueryVariables = {}
+
+export type AllVideosQuery = { __typename?: "Query" } & {
+  videos: Array<{ __typename?: "Video" } & BasicVideoDetailsFragment>
+}
+
 export type BasicVideoDetailsFragment = { __typename?: "Video" } & Pick<
   Video,
   "id" | "name" | "videoID"
@@ -230,6 +236,31 @@ export type GetVideoQueryHookResult = ReturnType<typeof useGetVideoQuery>
 export type GetVideoQueryResult = ApolloReactCommon.QueryResult<
   GetVideoQuery,
   GetVideoQueryVariables
+>
+export const AllVideosDocument = gql`
+  query AllVideos {
+    videos {
+      ...basicVideoDetails
+    }
+  }
+  ${BasicVideoDetailsFragmentDoc}
+`
+
+export function useAllVideosQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    AllVideosQuery,
+    AllVideosQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<AllVideosQuery, AllVideosQueryVariables>(
+    AllVideosDocument,
+    baseOptions
+  )
+}
+export type AllVideosQueryHookResult = ReturnType<typeof useAllVideosQuery>
+export type AllVideosQueryResult = ApolloReactCommon.QueryResult<
+  AllVideosQuery,
+  AllVideosQueryVariables
 >
 export const AddProposedClipDocument = gql`
   mutation AddProposedClip($input: AddProposedClipInput!) {

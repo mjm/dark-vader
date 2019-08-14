@@ -1,3 +1,5 @@
+import React from "react"
+import clsx from "clsx"
 import {
   Toolbar,
   AppBar,
@@ -10,19 +12,49 @@ import {
   CssBaseline,
   Breadcrumbs,
   Box,
-  Link
+  Link,
+  IconButton,
+  Drawer,
+  Divider
 } from "@material-ui/core"
 import AutorenewIcon from "@material-ui/icons/Autorenew"
+import MenuIcon from "@material-ui/icons/Menu"
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import Router from "next/router"
 import Head from "next/head"
+import { VideoList } from "./videoList"
+
+const drawerWidth = 300
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
-      marginTop: theme.spacing(3)
+    appBar: {
+      transition: theme.transitions.create(["margin", "width"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      })
     },
-    menuButton: {
-      marginRight: theme.spacing(2)
+    appBarShift: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+      transition: theme.transitions.create(["margin", "width"], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen
+      })
+    },
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0
+    },
+    drawerPaper: {
+      width: drawerWidth
+    },
+    drawerHeader: {
+      display: "flex",
+      alignItems: "center",
+      padding: "0 8px",
+      ...theme.mixins.toolbar,
+      justifyContent: "flex-end"
     },
     title: {
       flexGrow: 1,
@@ -30,6 +62,22 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     icon: {
       marginRight: theme.spacing(0.5)
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      }),
+      marginLeft: -drawerWidth
+    },
+    contentShift: {
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen
+      }),
+      marginLeft: 0
     }
   })
 )
@@ -40,15 +88,42 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
   const classes = useStyles({})
+  const [menuOpen, setMenuOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    const handleRouteChange = () => {
+      setMenuOpen(false)
+    }
+
+    Router.events.on("routeChangeStart", handleRouteChange)
+    return () => {
+      Router.events.off("routeChangeStart", handleRouteChange)
+    }
+  }, [setMenuOpen])
 
   return (
-    <>
+    <Box display="flex">
       <Head>
         <title>Monster Factory!</title>
       </Head>
       <CssBaseline />
-      <AppBar position="static">
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: menuOpen
+        })}
+      >
         <Toolbar>
+          {menuOpen ? null : (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={() => setMenuOpen(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Breadcrumbs className={classes.title}>
             <Typography variant="h6" color="inherit">
               Monster Factory
@@ -67,7 +142,29 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Container className={classes.container}>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={menuOpen}
+        classes={{
+          paper: classes.drawerPaper
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={() => setMenuOpen(false)}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <VideoList />
+      </Drawer>
+      <Container
+        className={clsx(classes.content, {
+          [classes.contentShift]: menuOpen
+        })}
+      >
+        <div className={classes.drawerHeader} />
         {children}
         <Box mt={6} mb={4}>
           <Typography variant="body2" color="textSecondary" align="center">
@@ -91,7 +188,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
           </Typography>
         </Box>
       </Container>
-    </>
+    </Box>
   )
 }
 
