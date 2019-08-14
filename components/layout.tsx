@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       flexGrow: 1,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
       padding: theme.spacing(3),
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
@@ -159,35 +162,37 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
         <Divider />
         <VideoList />
       </Drawer>
-      <Container
+      <div
         className={clsx(classes.content, {
           [classes.contentShift]: menuOpen
         })}
       >
         <div className={classes.drawerHeader} />
-        {children}
-        <Box mt={6} mb={4}>
-          <Typography variant="body2" color="textSecondary" align="center">
-            Created by{" "}
-            <Link
-              href="https://www.mattmoriarity.com/"
-              target="_blank"
-              rel="noopener"
-            >
-              Matt Moriarity
-            </Link>
-            . Source code available on{" "}
-            <Link
-              href="https://github.com/mjm/dark-vader/"
-              target="_blank"
-              rel="noopener"
-            >
-              GitHub
-            </Link>
-            .
-          </Typography>
-        </Box>
-      </Container>
+        <Container>
+          {children}
+          <Box mt={6} mb={4}>
+            <Typography variant="body2" color="textSecondary" align="center">
+              Created by{" "}
+              <Link
+                href="https://www.mattmoriarity.com/"
+                target="_blank"
+                rel="noopener"
+              >
+                Matt Moriarity
+              </Link>
+              . Source code available on{" "}
+              <Link
+                href="https://github.com/mjm/dark-vader/"
+                target="_blank"
+                rel="noopener"
+              >
+                GitHub
+              </Link>
+              .
+            </Typography>
+          </Box>
+        </Container>
+      </div>
     </Box>
   )
 }
