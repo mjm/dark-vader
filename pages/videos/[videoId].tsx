@@ -125,6 +125,8 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                 <Grid item container direction="row">
                   <Grid item>
                     <TextField
+                      style={{ width: 80 }}
+                      variant="outlined"
                       label="Start Time"
                       disabled
                       value={formatTimestamp(
@@ -132,7 +134,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                       )}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item style={{ marginLeft: 8 }}>
                     <Tooltip
                       title={
                         values.start === null
@@ -182,6 +184,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                     as={TextField}
                     name="quote"
                     label="Quote"
+                    variant="outlined"
                     multiline
                     fullWidth
                     margin="dense"
