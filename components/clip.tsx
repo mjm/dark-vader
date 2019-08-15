@@ -6,7 +6,6 @@ import {
   createStyles,
   CardContent
 } from "@material-ui/core"
-import Markdown from "react-markdown"
 import { VideoCardMedia } from "./video"
 import { ClipDetailsFragment } from "../lib/generated/graphql-components"
 import { QuoteText } from "./quote"

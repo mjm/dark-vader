@@ -14,13 +14,16 @@ import {
   Paper,
   TextField,
   Button,
-  Grid
+  Grid,
+  IconButton
 } from "@material-ui/core"
 import Head from "next/head"
 import withData from "../../components/apollo"
 import { Formik, FormikHelpers, Form, Field } from "formik"
-import { Timestamp } from "../../components/timestamp"
+import { formatTimestamp } from "../../components/timestamp"
 import { ClipList } from "../../components/clipList"
+import LockIcon from "@material-ui/icons/Lock"
+import LockOpenIcon from "@material-ui/icons/LockOpen"
 
 const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
   const { videoId } = query
@@ -63,6 +66,7 @@ export default withData(ShowVideo)
 
 interface FormInput {
   quote: string
+  start: number | null
 }
 
 interface ProposeClipFormProps {
@@ -79,7 +83,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({ video, start }) => {
         variables: {
           input: {
             videoID: video.id,
-            start,
+            start: input.start === null ? start : input.start,
             quote: input.quote
           }
         }
@@ -93,8 +97,8 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({ video, start }) => {
   return (
     <Box mt={4} maxWidth={720} marginX="auto">
       <Paper style={{ padding: 16 }}>
-        <Formik initialValues={{ quote: "" }} onSubmit={onSubmit}>
-          {({ isSubmitting }) => (
+        <Formik initialValues={{ quote: "", start: null }} onSubmit={onSubmit}>
+          {({ isSubmitting, values, setFieldValue }) => (
             <Form>
               <Grid container direction="column" spacing={2}>
                 <Grid item>
@@ -103,10 +107,29 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({ video, start }) => {
                     spot where the clip should start.
                   </Typography>
                 </Grid>
-                <Grid item>
-                  <Typography variant="body1">
-                    Start Time: <Timestamp seconds={start} />
-                  </Typography>
+                <Grid item container direction="row" spacing={2}>
+                  <Grid item>
+                    <TextField
+                      label="Start Time"
+                      disabled
+                      value={formatTimestamp(
+                        values.start === null ? start : values.start
+                      )}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      color="primary"
+                      onClick={() => {
+                        setFieldValue(
+                          "start",
+                          values.start === null ? start : null
+                        )
+                      }}
+                    >
+                      {values.start === null ? <LockOpenIcon /> : <LockIcon />}
+                    </IconButton>
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <Field

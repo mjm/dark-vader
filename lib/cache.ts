@@ -1,5 +1,6 @@
 import Redis from "ioredis"
 
+console.log("creating redis client")
 const redis = new Redis(process.env.REDIS_URL)
 
 type KeyType = string | string[]
