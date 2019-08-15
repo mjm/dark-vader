@@ -11,6 +11,7 @@ interface CacheSetOptions {
 }
 
 type CacheGetOrCacheOptions<T> = Omit<CacheSetOptions, "extraKeys"> & {
+  refresh?: boolean
   extraKeys?: (value: T) => KeyType[]
 }
 
@@ -84,7 +85,9 @@ export class Cache {
     const value = await this.get(key)
     if (value) {
       const extraKeys = options.extraKeys ? options.extraKeys(value) : []
-      await this.refresh(key, { ...options, extraKeys })
+      if (options.expire && options.refresh !== false) {
+        await this.refresh(key, { ...options, extraKeys })
+      }
       return value
     }
 

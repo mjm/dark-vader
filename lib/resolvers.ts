@@ -17,7 +17,7 @@ export const Query: QueryResolvers = {
           })
           .all()) as Airtable.Row<{}>[]
       },
-      { expire: 3600 }
+      { expire: 7200, refresh: false }
     )
   },
 
@@ -58,7 +58,7 @@ export const Query: QueryResolvers = {
           .firstPage()
         return highestIDClips[0].fields["ID"] as number
       },
-      { expire: true }
+      { expire: true, refresh: false }
     )
 
     while (true) {
@@ -166,7 +166,7 @@ export const Video: VideoResolvers = {
           })
           .all()) as Airtable.Row<{}>[]
       },
-      { expire: true }
+      { expire: true, refresh: false }
     )
   }
 }
