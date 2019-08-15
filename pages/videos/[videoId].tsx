@@ -139,6 +139,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                           ? "Lock the start time to the current time in the video"
                           : "Unlock the start time so it follows the video"
                       }
+                      placement="top"
                     >
                       <IconButton
                         color="primary"
@@ -158,7 +159,10 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                     </Tooltip>
                   </Grid>
                   <Grid item>
-                    <Tooltip title="Rewind the video to the start time of the clip">
+                    <Tooltip
+                      title="Rewind the video to the start time of the clip"
+                      placement="top"
+                    >
                       <IconButton
                         color="primary"
                         onClick={() => {
