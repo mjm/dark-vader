@@ -3,7 +3,7 @@ import { NextPage } from "next"
 import withData from "../../components/apollo"
 import { useGetClipQuery } from "../../lib/generated/graphql-components"
 import { Clip } from "../../components/clip"
-import { Typography, Link } from "@material-ui/core"
+import { Typography, Link, CircularProgress, Box } from "@material-ui/core"
 import Layout from "../../components/layout"
 import Head from "next/head"
 import { Router } from "next/router"
@@ -17,7 +17,13 @@ const ShowClip: NextPage<{ query: Router["query"] }> = ({ query }) => {
   })
 
   if (loading) {
-    return <Layout>Loading...</Layout>
+    return (
+      <Layout>
+        <Box my={2} display="flex" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      </Layout>
+    )
   }
 
   if (error) {

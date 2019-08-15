@@ -16,7 +16,8 @@ import {
   Button,
   Grid,
   IconButton,
-  Tooltip
+  Tooltip,
+  CircularProgress
 } from "@material-ui/core"
 import Head from "next/head"
 import withData from "../../components/apollo"
@@ -44,7 +45,13 @@ const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
   })
 
   if (loading) {
-    return <Layout>Loading...</Layout>
+    return (
+      <Layout>
+        <Box my={2} display="flex" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      </Layout>
+    )
   }
 
   if (error) {
