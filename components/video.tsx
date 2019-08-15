@@ -32,19 +32,23 @@ interface Props {
   onTimeChange?: (time: number) => void
 }
 
-export const Video: React.FC<Props> = ({ video, onTimeChange }) => {
-  const classes = useStyles({})
+export const Video = React.forwardRef<VideoCardMediaRef, Props>(
+  ({ video, onTimeChange }, ref) => {
+    const classes = useStyles({})
 
-  return (
-    <Card className={classes.card}>
-      <VideoCardMedia video={video} onTimeChange={onTimeChange} />
-      <CardContent className={classes.content}>
-        <Typography variant="subtitle2">Published {video.published}</Typography>
-        <Typography variant="body1">Starring {video.monsterName}</Typography>
-      </CardContent>
-    </Card>
-  )
-}
+    return (
+      <Card className={classes.card}>
+        <VideoCardMedia ref={ref} video={video} onTimeChange={onTimeChange} />
+        <CardContent className={classes.content}>
+          <Typography variant="subtitle2">
+            Published {video.published}
+          </Typography>
+          <Typography variant="body1">Starring {video.monsterName}</Typography>
+        </CardContent>
+      </Card>
+    )
+  }
+)
 
 interface VideoCardMediaProps {
   video: BasicVideoDetailsFragment
@@ -53,13 +57,25 @@ interface VideoCardMediaProps {
   onTimeChange?: (time: number) => void
 }
 
-export const VideoCardMedia: React.FC<VideoCardMediaProps> = ({
-  video,
-  autoplay,
-  start,
-  onTimeChange
-}) => {
+export interface VideoCardMediaRef {
+  seekTo(seconds: number): void
+}
+
+export const VideoCardMedia = React.forwardRef<
+  VideoCardMediaRef,
+  VideoCardMediaProps
+>(({ video, autoplay, start, onTimeChange }, ref) => {
   const player = React.useRef<any>(null)
+
+  React.useImperativeHandle(ref, () => {
+    return {
+      seekTo(seconds: number) {
+        if (player.current) {
+          player.current.seekTo(seconds, true)
+        }
+      }
+    }
+  })
 
   React.useEffect(() => {
     if (onTimeChange) {
@@ -94,4 +110,4 @@ export const VideoCardMedia: React.FC<VideoCardMediaProps> = ({
       }}
     />
   )
-}
+})

@@ -7,7 +7,7 @@ import {
   BasicVideoDetailsFragment
 } from "../../lib/generated/graphql-components"
 import Layout from "../../components/layout"
-import { Video } from "../../components/video"
+import { Video, VideoCardMediaRef } from "../../components/video"
 import {
   Typography,
   Box,
@@ -15,7 +15,8 @@ import {
   TextField,
   Button,
   Grid,
-  IconButton
+  IconButton,
+  Tooltip
 } from "@material-ui/core"
 import Head from "next/head"
 import withData from "../../components/apollo"
@@ -24,11 +25,20 @@ import { formatTimestamp } from "../../components/timestamp"
 import { ClipList } from "../../components/clipList"
 import LockIcon from "@material-ui/icons/Lock"
 import LockOpenIcon from "@material-ui/icons/LockOpen"
+import ReplayIcon from "@material-ui/icons/Replay"
 
 const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
   const { videoId } = query
 
+  const videoRef = React.useRef<VideoCardMediaRef>(null)
   const [videoTime, setVideoTime] = React.useState(0)
+
+  function onRewind(seconds: number) {
+    if (videoRef.current) {
+      videoRef.current.seekTo(seconds)
+    }
+  }
+
   const { loading, error, data } = useGetVideoQuery({
     variables: { id: videoId as string }
   })
@@ -51,8 +61,8 @@ const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
         <title>Monster Factory: {video.name}</title>
       </Head>
 
-      <Video video={video} onTimeChange={setVideoTime} />
-      <ProposeClipForm video={video} start={videoTime} />
+      <Video ref={videoRef} video={video} onTimeChange={setVideoTime} />
+      <ProposeClipForm video={video} start={videoTime} onRewind={onRewind} />
       <ClipList clips={video.clips} />
     </Layout>
   )
@@ -72,9 +82,14 @@ interface FormInput {
 interface ProposeClipFormProps {
   video: BasicVideoDetailsFragment
   start: number
+  onRewind: (seconds: number) => void
 }
 
-const ProposeClipForm: React.FC<ProposeClipFormProps> = ({ video, start }) => {
+const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
+  video,
+  start,
+  onRewind
+}) => {
   const [addClip] = useAddProposedClipMutation()
 
   async function onSubmit(input: FormInput, actions: FormikHelpers<FormInput>) {
@@ -107,7 +122,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({ video, start }) => {
                     spot where the clip should start.
                   </Typography>
                 </Grid>
-                <Grid item container direction="row" spacing={2}>
+                <Grid item container direction="row">
                   <Grid item>
                     <TextField
                       label="Start Time"
@@ -118,17 +133,44 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({ video, start }) => {
                     />
                   </Grid>
                   <Grid item>
-                    <IconButton
-                      color="primary"
-                      onClick={() => {
-                        setFieldValue(
-                          "start",
-                          values.start === null ? start : null
-                        )
-                      }}
+                    <Tooltip
+                      title={
+                        values.start === null
+                          ? "Lock the start time to the current time in the video"
+                          : "Unlock the start time so it follows the video"
+                      }
                     >
-                      {values.start === null ? <LockOpenIcon /> : <LockIcon />}
-                    </IconButton>
+                      <IconButton
+                        color="primary"
+                        onClick={() => {
+                          setFieldValue(
+                            "start",
+                            values.start === null ? start : null
+                          )
+                        }}
+                      >
+                        {values.start === null ? (
+                          <LockOpenIcon />
+                        ) : (
+                          <LockIcon />
+                        )}
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip title="Rewind the video to the start time of the clip">
+                      <IconButton
+                        color="primary"
+                        onClick={() => {
+                          if (values.start !== null) {
+                            onRewind(values.start)
+                          }
+                        }}
+                        disabled={values.start === null}
+                      >
+                        <ReplayIcon />
+                      </IconButton>
+                    </Tooltip>
                   </Grid>
                 </Grid>
                 <Grid item>
