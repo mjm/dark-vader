@@ -71,12 +71,16 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      padding: theme.spacing(3),
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
       }),
-      marginLeft: -drawerWidth
+      marginLeft: -drawerWidth,
+      [theme.breakpoints.up("sm")]: {
+        padding: theme.spacing(3)
+      }
     },
     contentShift: {
       transition: theme.transitions.create("margin", {
@@ -88,14 +92,16 @@ const useStyles = makeStyles((theme: Theme) =>
     buttonText: {
       flexShrink: 0
     },
-    breadcrumbList: {
-      flexWrap: "nowrap"
-    },
     toolbar: {
       height: theme.spacing(7),
       overflowY: "hidden",
       [theme.breakpoints.up("sm")]: {
         height: theme.spacing(8)
+      }
+    },
+    container: {
+      [theme.breakpoints.down("xs")]: {
+        padding: 0
       }
     }
   })
@@ -207,7 +213,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
         })}
       >
         <div className={classes.drawerHeader} />
-        <Container>
+        <Container className={classes.container}>
           {children}
           <Box mt={6} mb={4}>
             <Typography variant="body2" color="textSecondary" align="center">

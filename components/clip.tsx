@@ -16,7 +16,7 @@ import ReplayIcon from "@material-ui/icons/Replay"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
-      width: 720,
+      maxWidth: 720,
       marginLeft: "auto",
       marginRight: "auto"
     },

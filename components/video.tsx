@@ -8,7 +8,7 @@ import {
   CardMedia,
   CardContent
 } from "@material-ui/core"
-import YouTube, { PlayerVars } from "react-youtube"
+import YouTube, { PlayerVars, YouTubeProps } from "react-youtube"
 import {
   BasicVideoDetailsFragment,
   VideoDetailsFragment
@@ -17,12 +17,25 @@ import {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
-      width: 720,
+      maxWidth: 720,
       marginLeft: "auto",
       marginRight: "auto"
     },
     content: {
       paddingTop: theme.spacing(3)
+    },
+    videoContainer: {
+      position: "relative",
+      width: "100%",
+      height: 0,
+      paddingBottom: "56.25%"
+    },
+    video: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%"
     }
   })
 )
@@ -65,6 +78,7 @@ export const VideoCardMedia = React.forwardRef<
   VideoCardMediaRef,
   VideoCardMediaProps
 >(({ video, autoplay, start, onTimeChange }, ref) => {
+  const classes = useStyles({})
   const player = React.useRef<any>(null)
 
   React.useImperativeHandle(ref, () => {
@@ -97,12 +111,11 @@ export const VideoCardMedia = React.forwardRef<
 
   return (
     <CardMedia
-      component={YouTube}
+      classes={{ root: classes.video }}
+      component={FullWidthYouTube}
+      image={video.videoID}
       videoId={video.videoID}
-      image="foo"
       opts={{
-        width: "720",
-        height: "405",
         playerVars
       }}
       onReady={evt => {
@@ -111,3 +124,20 @@ export const VideoCardMedia = React.forwardRef<
     />
   )
 })
+
+const FullWidthYouTube = ({
+  opts,
+  ...props
+}: YouTubeProps & { image: string }) => {
+  const classes = useStyles({})
+
+  opts = { ...opts, width: null, height: null }
+
+  return (
+    <YouTube
+      containerClassName={classes.videoContainer}
+      opts={opts}
+      {...props}
+    />
+  )
+}
