@@ -104,7 +104,7 @@ export const VideoCardMedia = React.forwardRef<
     }
   }, [onTimeChange])
 
-  const playerVars: PlayerVars = { autoplay: autoplay ? 1 : 0 }
+  const playerVars: PlayerVars = { playsinline: 1, autoplay: autoplay ? 1 : 0 }
   if (start) {
     playerVars.start = start
   }
