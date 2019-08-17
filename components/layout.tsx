@@ -15,7 +15,10 @@ import {
   Link,
   IconButton,
   Drawer,
-  Divider
+  Divider,
+  Hidden,
+  useMediaQuery,
+  useTheme
 } from "@material-ui/core"
 import AutorenewIcon from "@material-ui/icons/Autorenew"
 import MenuIcon from "@material-ui/icons/Menu"
@@ -81,6 +84,19 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.enteringScreen
       }),
       marginLeft: 0
+    },
+    buttonText: {
+      flexShrink: 0
+    },
+    breadcrumbList: {
+      flexWrap: "nowrap"
+    },
+    toolbar: {
+      height: theme.spacing(7),
+      overflowY: "hidden",
+      [theme.breakpoints.up("sm")]: {
+        height: theme.spacing(8)
+      }
     }
   })
 )
@@ -90,6 +106,13 @@ interface Props {
 }
 
 const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
+  const theme = useTheme()
+  const isMobile = !useMediaQuery(theme.breakpoints.up("sm"), {
+    defaultMatches: true
+  })
+  const isSmall = !useMediaQuery(theme.breakpoints.up("md"), {
+    defaultMatches: true
+  })
   const classes = useStyles({})
   const [menuOpen, setMenuOpen] = React.useState(false)
 
@@ -116,7 +139,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
           [classes.appBarShift]: menuOpen
         })}
       >
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           {menuOpen ? null : (
             <IconButton
               color="inherit"
@@ -127,22 +150,38 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
               <MenuIcon />
             </IconButton>
           )}
-          <Breadcrumbs className={classes.title}>
+          <Breadcrumbs
+            className={classes.title}
+            maxItems={isMobile ? 1 : isSmall ? 2 : 4}
+            itemsBeforeCollapse={0}
+            itemsAfterCollapse={isMobile ? 1 : 2}
+          >
             <Typography variant="h6" color="inherit">
               Monster Factory
             </Typography>
             {breadcrumbs}
           </Breadcrumbs>
-          <Button
-            color="default"
-            variant="contained"
-            onClick={() => {
-              Router.push("/clips/random")
-            }}
-          >
-            <AutorenewIcon className={classes.icon} />
-            Random Clip!
-          </Button>
+          <Hidden implementation="css" smDown>
+            <Button
+              color="default"
+              variant="contained"
+              onClick={() => {
+                Router.push("/clips/random")
+              }}
+            >
+              <AutorenewIcon className={classes.icon} />
+              <span className={classes.buttonText}>Random Clip!</span>
+            </Button>
+          </Hidden>
+          <Hidden implementation="css" mdUp>
+            <IconButton
+              color="inherit"
+              edge="end"
+              onClick={() => Router.push("/clips/random")}
+            >
+              <AutorenewIcon />
+            </IconButton>
+          </Hidden>
         </Toolbar>
       </AppBar>
       <Drawer
