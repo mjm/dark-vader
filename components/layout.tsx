@@ -28,6 +28,7 @@ import Router from "next/router"
 import Head from "next/head"
 import { VideoList } from "./videoList"
 import NextLink from "next/link"
+import { useRouterEvents } from "./router"
 
 const drawerWidth = 300
 
@@ -118,31 +119,19 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [randomizing, setRandomizing] = React.useState(false)
 
-  React.useEffect(() => {
-    const routeChangeStart = (url: string) => {
-      setMenuOpen(false)
-      if (url === "/clips/random") {
-        setRandomizing(true)
-      }
-    }
-
-    const routeChangeComplete = () => {
-      setRandomizing(false)
-    }
-
-    const routeChangeError = () => {
-      setRandomizing(false)
-    }
-
-    Router.events.on("routeChangeStart", routeChangeStart)
-    Router.events.on("routeChangeComplete", routeChangeComplete)
-    Router.events.on("routeChangeError", routeChangeError)
-    return () => {
-      Router.events.off("routeChangeStart", routeChangeStart)
-      Router.events.off("routeChangeComplete", routeChangeComplete)
-      Router.events.off("routeChangeError", routeChangeError)
-    }
-  }, [setMenuOpen, setRandomizing])
+  useRouterEvents(
+    {
+      routeChangeStart(url: string) {
+        setMenuOpen(false)
+        if (url === "/clips/random") {
+          setRandomizing(true)
+        }
+      },
+      routeChangeComplete: () => setRandomizing(false),
+      routeChangeError: () => setRandomizing(false)
+    },
+    [setMenuOpen, setRandomizing]
+  )
 
   return (
     <Box display="flex">
