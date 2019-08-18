@@ -114,13 +114,6 @@ interface Props {
 }
 
 const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
-  const theme = useTheme()
-  const isMobile = !useMediaQuery(theme.breakpoints.up("sm"), {
-    defaultMatches: true
-  })
-  const isSmall = !useMediaQuery(theme.breakpoints.up("md"), {
-    defaultMatches: true
-  })
   const classes = useStyles({})
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [randomizing, setRandomizing] = React.useState(false)
@@ -149,7 +142,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
       Router.events.off("routeChangeComplete", routeChangeComplete)
       Router.events.off("routeChangeError", routeChangeError)
     }
-  }, [setMenuOpen])
+  }, [setMenuOpen, setRandomizing])
 
   return (
     <Box display="flex">
@@ -157,78 +150,15 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
         <title>Monster Factory!</title>
       </Head>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: menuOpen
-        })}
-      >
-        <Toolbar className={classes.toolbar}>
-          {menuOpen ? null : (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={() => setMenuOpen(true)}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Breadcrumbs
-            className={classes.title}
-            maxItems={isMobile ? 1 : isSmall ? 2 : 4}
-            itemsBeforeCollapse={0}
-            itemsAfterCollapse={isMobile ? 1 : 2}
-          >
-            <Typography variant="h6" color="inherit">
-              Monster Factory
-            </Typography>
-            {breadcrumbs}
-          </Breadcrumbs>
-          <Hidden implementation="css" smDown>
-            <NextLink href="/clips/random" passHref>
-              <Button component="a" color="default" variant="contained">
-                {randomizing ? (
-                  <Box mr={1} height={20}>
-                    <CircularProgress size={20} color="inherit" />
-                  </Box>
-                ) : (
-                  <AutorenewIcon className={classes.icon} />
-                )}
-                <span className={classes.buttonText}>Random Clip!</span>
-              </Button>
-            </NextLink>
-          </Hidden>
-          <Hidden implementation="css" mdUp>
-            <NextLink href="/clips/random" passHref>
-              <IconButton component="a" color="inherit" edge="end">
-                {randomizing ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : (
-                  <AutorenewIcon />
-                )}
-              </IconButton>
-            </NextLink>
-          </Hidden>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={menuOpen}
-        classes={{
-          paper: classes.drawerPaper
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={() => setMenuOpen(false)}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <VideoList />
-      </Drawer>
+
+      <NavBar
+        menuOpen={menuOpen}
+        onOpenMenu={() => setMenuOpen(true)}
+        randomizing={randomizing}
+        breadcrumbs={breadcrumbs}
+      />
+      <VideosDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+
       <div
         className={clsx(classes.content, {
           [classes.contentShift]: menuOpen
@@ -237,27 +167,7 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
         <div className={classes.drawerHeader} />
         <Container className={classes.container}>
           {children}
-          <Box mt={6} mb={4}>
-            <Typography variant="body2" color="textSecondary" align="center">
-              Created by{" "}
-              <Link
-                href="https://www.mattmoriarity.com/"
-                target="_blank"
-                rel="noopener"
-              >
-                Matt Moriarity
-              </Link>
-              . Source code available on{" "}
-              <Link
-                href="https://github.com/mjm/dark-vader/"
-                target="_blank"
-                rel="noopener"
-              >
-                GitHub
-              </Link>
-              .
-            </Typography>
-          </Box>
+          <Footer />
         </Container>
       </div>
     </Box>
@@ -265,3 +175,139 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
 }
 
 export default Layout
+
+interface NavBarProps {
+  menuOpen: boolean
+  onOpenMenu: () => void
+  randomizing: boolean
+  breadcrumbs?: React.ReactNode | React.ReactNode[]
+}
+
+const NavBar: React.FC<NavBarProps> = ({
+  menuOpen,
+  onOpenMenu,
+  randomizing,
+  breadcrumbs
+}) => {
+  const theme = useTheme()
+  const isMobile = !useMediaQuery(theme.breakpoints.up("sm"), {
+    defaultMatches: true
+  })
+  const isSmall = !useMediaQuery(theme.breakpoints.up("md"), {
+    defaultMatches: true
+  })
+  const classes = useStyles({})
+
+  return (
+    <AppBar
+      position="fixed"
+      className={clsx(classes.appBar, {
+        [classes.appBarShift]: menuOpen
+      })}
+    >
+      <Toolbar className={classes.toolbar}>
+        {menuOpen ? null : (
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={onOpenMenu}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+        <Breadcrumbs
+          className={classes.title}
+          maxItems={isMobile || menuOpen ? 1 : isSmall ? 2 : 4}
+          itemsBeforeCollapse={0}
+          itemsAfterCollapse={isMobile || menuOpen ? 1 : 2}
+        >
+          <Typography variant="h6" color="inherit">
+            Monster Factory
+          </Typography>
+          {breadcrumbs}
+        </Breadcrumbs>
+        <Hidden implementation="css" smDown>
+          <NextLink href="/clips/random" passHref>
+            <Button component="a" color="default" variant="contained">
+              {randomizing ? (
+                <Box mr={1} height={20}>
+                  <CircularProgress size={20} color="inherit" />
+                </Box>
+              ) : (
+                <AutorenewIcon className={classes.icon} />
+              )}
+              <span className={classes.buttonText}>Random Clip!</span>
+            </Button>
+          </NextLink>
+        </Hidden>
+        <Hidden implementation="css" mdUp>
+          <NextLink href="/clips/random" passHref>
+            <IconButton component="a" color="inherit" edge="end">
+              {randomizing ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <AutorenewIcon />
+              )}
+            </IconButton>
+          </NextLink>
+        </Hidden>
+      </Toolbar>
+    </AppBar>
+  )
+}
+
+interface VideosDrawerProps {
+  open: boolean
+  onClose: () => void
+}
+
+const VideosDrawer: React.FC<VideosDrawerProps> = ({ open, onClose }) => {
+  const classes = useStyles({})
+
+  return (
+    <Drawer
+      className={classes.drawer}
+      variant="persistent"
+      anchor="left"
+      open={open}
+      classes={{
+        paper: classes.drawerPaper
+      }}
+    >
+      <div className={classes.drawerHeader}>
+        <IconButton onClick={onClose}>
+          <ChevronLeftIcon />
+        </IconButton>
+      </div>
+
+      <Divider />
+
+      <VideoList />
+    </Drawer>
+  )
+}
+
+const Footer: React.FC = () => (
+  <Box mt={6} mb={4}>
+    <Typography variant="body2" color="textSecondary" align="center">
+      Created by{" "}
+      <Link
+        href="https://www.mattmoriarity.com/"
+        target="_blank"
+        rel="noopener"
+      >
+        Matt Moriarity
+      </Link>
+      . Source code available on{" "}
+      <Link
+        href="https://github.com/mjm/dark-vader/"
+        target="_blank"
+        rel="noopener"
+      >
+        GitHub
+      </Link>
+      .
+    </Typography>
+  </Box>
+)
