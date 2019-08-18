@@ -1120,11 +1120,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/airtable@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@types/airtable/-/airtable-0.5.5.tgz#5f69415b1bfcbdefc301b5fa8161bddd32dea7a3"
-  integrity sha512-mNiKWQFzP+aeprNunDOPcvcAmBNAbEOxBoTiLPzMIRGe4HAvCxN5qT60fH7iqEmxOrneCm8nPQhDUgfcLpK2Pg==
-
 "@types/body-parser@*":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"

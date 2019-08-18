@@ -10,13 +10,12 @@ export const Query: QueryResolvers = {
   async videos(_, {}, { cache }) {
     return await cache.getOrCache(
       "videos",
-      async () => {
-        return (await videos
+      async () =>
+        await videos
           .select({
             sort: [{ field: "Published", direction: "asc" }]
           })
-          .all()) as Airtable.Row<{}>[]
-      },
+          .all(),
       { expire: 7200, refresh: false }
     )
   },
@@ -24,10 +23,7 @@ export const Query: QueryResolvers = {
   async video(_, { id }, { cache }) {
     return await cache.getOrCache(
       ["videos", id],
-      async () => {
-        const video = await videos.find(id)
-        return (video as unknown) as Airtable.Row<{}>
-      },
+      async () => await videos.find(id),
       {
         expire: true,
         extraKeys: video => [["videos", "ytid", video.fields["Video ID"]]]
@@ -38,11 +34,11 @@ export const Query: QueryResolvers = {
   async clip(_, { id }, { cache }) {
     return await cache.getOrCache(
       ["clips", id],
-      async () => {
-        const clip = await clips.find(id)
-        return (clip as unknown) as Airtable.Row<{}>
-      },
-      { expire: true, extraKeys: clip => [["clips", "id", clip.fields["ID"]]] }
+      async () => await clips.find(id),
+      {
+        expire: true,
+        extraKeys: clip => [["clips", "id", clip.fields["ID"].toString()]]
+      }
     )
   },
 
@@ -56,7 +52,7 @@ export const Query: QueryResolvers = {
             maxRecords: 1
           })
           .firstPage()
-        return highestIDClips[0].fields["ID"] as number
+        return highestIDClips[0].fields["ID"]
       },
       { expire: true, refresh: false }
     )
@@ -93,11 +89,11 @@ export const Query: QueryResolvers = {
 
 export const Mutation: MutationResolvers = {
   async addProposedClip(_, { input }) {
-    const clip = ((await proposedClips.create({
+    const clip = await proposedClips.create({
       Video: [input.videoID],
       "Start Time": input.start,
       "Quote Text": input.quote
-    })) as unknown) as Airtable.Row<{}>
+    })
 
     return { id: clip.id }
   }
@@ -109,10 +105,7 @@ export const Clip: ClipResolvers = {
 
     return await cache.getOrCache(
       ["videos", videoID],
-      async () => {
-        const video = await videos.find(videoID)
-        return (video as unknown) as Airtable.Row<{}>
-      },
+      async () => videos.find(videoID),
       {
         expire: true,
         extraKeys: video => [["videos", "ytid", video.fields["Video ID"]]]
@@ -158,14 +151,13 @@ export const Video: VideoResolvers = {
     const videoID = fields["Video ID"]
     return await cache.getOrCache(
       ["clips", videoID],
-      async () => {
-        return (await clips
+      async () =>
+        await clips
           .select({
             filterByFormula: `{Video} = '${videoID}'`,
             sort: [{ field: "Start Time", direction: "asc" }]
           })
-          .all()) as Airtable.Row<{}>[]
-      },
+          .all(),
       { expire: true, refresh: false }
     )
   }
