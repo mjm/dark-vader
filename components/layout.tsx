@@ -18,7 +18,8 @@ import {
   Divider,
   Hidden,
   useMediaQuery,
-  useTheme
+  useTheme,
+  CircularProgress
 } from "@material-ui/core"
 import AutorenewIcon from "@material-ui/icons/Autorenew"
 import MenuIcon from "@material-ui/icons/Menu"
@@ -121,15 +122,31 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
   })
   const classes = useStyles({})
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const [randomizing, setRandomizing] = React.useState(false)
 
   React.useEffect(() => {
-    const handleRouteChange = () => {
+    const routeChangeStart = (url: string) => {
       setMenuOpen(false)
+      if (url === "/clips/random") {
+        setRandomizing(true)
+      }
     }
 
-    Router.events.on("routeChangeStart", handleRouteChange)
+    const routeChangeComplete = () => {
+      setRandomizing(false)
+    }
+
+    const routeChangeError = () => {
+      setRandomizing(false)
+    }
+
+    Router.events.on("routeChangeStart", routeChangeStart)
+    Router.events.on("routeChangeComplete", routeChangeComplete)
+    Router.events.on("routeChangeError", routeChangeError)
     return () => {
-      Router.events.off("routeChangeStart", handleRouteChange)
+      Router.events.off("routeChangeStart", routeChangeStart)
+      Router.events.off("routeChangeComplete", routeChangeComplete)
+      Router.events.off("routeChangeError", routeChangeError)
     }
   }, [setMenuOpen])
 
@@ -175,7 +192,13 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
                 Router.push("/clips/random")
               }}
             >
-              <AutorenewIcon className={classes.icon} />
+              {randomizing ? (
+                <Box mr={1} height={20}>
+                  <CircularProgress size={20} color="inherit" />
+                </Box>
+              ) : (
+                <AutorenewIcon className={classes.icon} />
+              )}
               <span className={classes.buttonText}>Random Clip!</span>
             </Button>
           </Hidden>
@@ -185,7 +208,11 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
               edge="end"
               onClick={() => Router.push("/clips/random")}
             >
-              <AutorenewIcon />
+              {randomizing ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <AutorenewIcon />
+              )}
             </IconButton>
           </Hidden>
         </Toolbar>
