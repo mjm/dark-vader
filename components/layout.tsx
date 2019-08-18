@@ -27,6 +27,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import Router from "next/router"
 import Head from "next/head"
 import { VideoList } from "./videoList"
+import NextLink from "next/link"
 
 const drawerWidth = 300
 
@@ -185,35 +186,29 @@ const Layout: React.FC<Props> = ({ breadcrumbs, children }) => {
             {breadcrumbs}
           </Breadcrumbs>
           <Hidden implementation="css" smDown>
-            <Button
-              color="default"
-              variant="contained"
-              onClick={() => {
-                Router.push("/clips/random")
-              }}
-            >
-              {randomizing ? (
-                <Box mr={1} height={20}>
-                  <CircularProgress size={20} color="inherit" />
-                </Box>
-              ) : (
-                <AutorenewIcon className={classes.icon} />
-              )}
-              <span className={classes.buttonText}>Random Clip!</span>
-            </Button>
+            <NextLink href="/clips/random" passHref>
+              <Button component="a" color="default" variant="contained">
+                {randomizing ? (
+                  <Box mr={1} height={20}>
+                    <CircularProgress size={20} color="inherit" />
+                  </Box>
+                ) : (
+                  <AutorenewIcon className={classes.icon} />
+                )}
+                <span className={classes.buttonText}>Random Clip!</span>
+              </Button>
+            </NextLink>
           </Hidden>
           <Hidden implementation="css" mdUp>
-            <IconButton
-              color="inherit"
-              edge="end"
-              onClick={() => Router.push("/clips/random")}
-            >
-              {randomizing ? (
-                <CircularProgress size={20} color="inherit" />
-              ) : (
-                <AutorenewIcon />
-              )}
-            </IconButton>
+            <NextLink href="/clips/random" passHref>
+              <IconButton component="a" color="inherit" edge="end">
+                {randomizing ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <AutorenewIcon />
+                )}
+              </IconButton>
+            </NextLink>
           </Hidden>
         </Toolbar>
       </AppBar>
