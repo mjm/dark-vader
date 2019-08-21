@@ -37,6 +37,12 @@ const useStyles = makeStyles((theme: Theme) =>
       left: 0,
       width: "100%",
       height: "100%"
+    },
+    published: {
+      marginBottom: theme.spacing(1)
+    },
+    emphasized: {
+      fontWeight: 500
     }
   })
 )
@@ -54,10 +60,13 @@ export const Video = React.forwardRef<VideoCardMediaRef, Props>(
       <Card className={classes.card}>
         <VideoCardMedia ref={ref} video={video} onTimeChange={onTimeChange} />
         <CardContent className={classes.content}>
-          <Typography variant="subtitle2">
+          <Typography variant="subtitle2" className={classes.published}>
             Published {moment(video.published).format("LL")}
           </Typography>
-          <Typography variant="body1">Starring {video.monsterName}</Typography>
+          <Typography variant="body1">
+            Playing <span className={classes.emphasized}>{video.game}</span>{" "}
+            with <span className={classes.emphasized}>{video.monsterName}</span>
+          </Typography>
         </CardContent>
       </Card>
     )

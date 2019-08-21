@@ -101,7 +101,7 @@ export type BasicVideoDetailsFragment = { __typename?: "Video" } & Pick<
 
 export type VideoDetailsFragment = { __typename?: "Video" } & Pick<
   Video,
-  "monsterName" | "published"
+  "game" | "monsterName" | "published"
 > & {
     clips: Array<{ __typename?: "Clip" } & BasicClipDetailsFragment>
   } & BasicVideoDetailsFragment
@@ -142,6 +142,7 @@ export const BasicClipDetailsFragmentDoc = gql`
 export const VideoDetailsFragmentDoc = gql`
   fragment videoDetails on Video {
     ...basicVideoDetails
+    game
     monsterName
     published
     clips {

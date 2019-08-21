@@ -30,6 +30,7 @@ fragment basicVideoDetails on Video {
 
 fragment videoDetails on Video {
   ...basicVideoDetails
+  game
   monsterName
   published
   clips {
