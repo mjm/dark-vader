@@ -13,6 +13,7 @@ import {
   BasicVideoDetailsFragment,
   VideoDetailsFragment
 } from "../lib/generated/graphql-components"
+import moment from "moment"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +55,7 @@ export const Video = React.forwardRef<VideoCardMediaRef, Props>(
         <VideoCardMedia ref={ref} video={video} onTimeChange={onTimeChange} />
         <CardContent className={classes.content}>
           <Typography variant="subtitle2">
-            Published {video.published}
+            Published {moment(video.published).format("LL")}
           </Typography>
           <Typography variant="body1">Starring {video.monsterName}</Typography>
         </CardContent>
