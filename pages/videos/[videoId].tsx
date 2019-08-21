@@ -16,12 +16,11 @@ import {
   Button,
   Grid,
   IconButton,
-  Tooltip,
-  CircularProgress
+  Tooltip
 } from "@material-ui/core"
 import Head from "next/head"
 import withData from "../../components/apollo"
-import { Formik, FormikHelpers, Form, Field } from "formik"
+import { Formik, FormikHelpers, Form, Field, FormikErrors } from "formik"
 import { formatTimestamp } from "../../components/timestamp"
 import { ClipList } from "../../components/clipList"
 import LockIcon from "@material-ui/icons/Lock"
@@ -44,33 +43,25 @@ const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
     variables: { id: videoId as string }
   })
 
-  if (loading) {
-    return (
-      <Layout>
-        <Box my={2} display="flex" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      </Layout>
-    )
-  }
-
   if (error) {
     return <Layout>Error: {error}</Layout>
   }
 
-  const video = data.video
+  const video = loading ? null : data && data.video
 
   return (
     <Layout
-      breadcrumbs={<Typography variant="subtitle1">{video.name}</Typography>}
+      breadcrumbs={
+        <Typography variant="subtitle1">
+          {video ? video.name : "Video"}
+        </Typography>
+      }
     >
-      <Head>
-        <title>Monster Factory: {video.name}</title>
-      </Head>
+      <Head>{video ? <title>Monster Factory: {video.name}</title> : null}</Head>
 
       <Video ref={videoRef} video={video} onTimeChange={setVideoTime} />
       <ProposeClipForm video={video} start={videoTime} onRewind={onRewind} />
-      <ClipList clips={video.clips} />
+      {video ? <ClipList clips={video.clips} /> : null}
     </Layout>
   )
 }
@@ -87,7 +78,7 @@ interface FormInput {
 }
 
 interface ProposeClipFormProps {
-  video: BasicVideoDetailsFragment
+  video?: BasicVideoDetailsFragment
   start: number
   onRewind: (seconds: number) => void
 }
@@ -116,10 +107,24 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
     }
   }
 
+  function validate(input: FormInput): FormikErrors<FormInput> {
+    const errors: FormikErrors<FormInput> = {}
+
+    if (!input.quote) {
+      errors.quote = "Some quote words are needed."
+    }
+
+    return errors
+  }
+
   return (
     <Box mt={4} maxWidth={720} marginX="auto">
       <Paper style={{ padding: 16 }}>
-        <Formik initialValues={{ quote: "", start: null }} onSubmit={onSubmit}>
+        <Formik
+          initialValues={{ quote: "", start: null }}
+          validate={validate}
+          onSubmit={onSubmit}
+        >
           {({ isSubmitting, values, setFieldValue }) => (
             <Form>
               <Grid container direction="column" spacing={2}>
@@ -137,7 +142,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                       label="Start Time"
                       disabled
                       value={formatTimestamp(
-                        values.start === null ? start : values.start
+                        values.start === null ? start || 0 : values.start
                       )}
                     />
                   </Grid>
@@ -158,6 +163,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                             values.start === null ? start : null
                           )
                         }}
+                        disabled={!video}
                       >
                         {values.start === null ? (
                           <LockOpenIcon />
@@ -179,7 +185,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                             onRewind(values.start)
                           }
                         }}
-                        disabled={values.start === null}
+                        disabled={!video || values.start === null}
                       >
                         <ReplayIcon />
                       </IconButton>
@@ -195,6 +201,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                     multiline
                     fullWidth
                     margin="dense"
+                    disabled={!video}
                   />
                 </Grid>
                 <Grid item>
@@ -202,7 +209,7 @@ const ProposeClipForm: React.FC<ProposeClipFormProps> = ({
                     variant="contained"
                     color="primary"
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={!video || isSubmitting}
                   >
                     {isSubmitting ? "Suggesting..." : "Suggest"}
                   </Button>

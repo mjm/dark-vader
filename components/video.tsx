@@ -8,6 +8,7 @@ import {
   CardMedia,
   CardContent
 } from "@material-ui/core"
+import Skeleton from "@material-ui/lab/Skeleton"
 import YouTube, { PlayerVars, YouTubeProps } from "react-youtube"
 import {
   BasicVideoDetailsFragment,
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  video: VideoDetailsFragment
+  video?: VideoDetailsFragment
   onTimeChange?: (time: number) => void
 }
 
@@ -60,13 +61,23 @@ export const Video = React.forwardRef<VideoCardMediaRef, Props>(
       <Card className={classes.card}>
         <VideoCardMedia ref={ref} video={video} onTimeChange={onTimeChange} />
         <CardContent className={classes.content}>
-          <Typography variant="subtitle2" className={classes.published}>
-            Published {moment(video.published).format("LL")}
-          </Typography>
-          <Typography variant="body1">
-            Playing <span className={classes.emphasized}>{video.game}</span>{" "}
-            with <span className={classes.emphasized}>{video.monsterName}</span>
-          </Typography>
+          {video ? (
+            <>
+              <Typography variant="subtitle2" className={classes.published}>
+                Published {moment(video.published).format("LL")}
+              </Typography>
+              <Typography variant="body1">
+                Playing <span className={classes.emphasized}>{video.game}</span>{" "}
+                with{" "}
+                <span className={classes.emphasized}>{video.monsterName}</span>
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Skeleton width={100} height={6} />
+              <Skeleton width={250} height={8} />
+            </>
+          )}
         </CardContent>
       </Card>
     )
@@ -74,7 +85,7 @@ export const Video = React.forwardRef<VideoCardMediaRef, Props>(
 )
 
 interface VideoCardMediaProps {
-  video: BasicVideoDetailsFragment
+  video?: BasicVideoDetailsFragment
   autoplay?: boolean
   start?: number
   onTimeChange?: (time: number) => void
@@ -113,6 +124,14 @@ export const VideoCardMedia = React.forwardRef<
       return () => clearInterval(interval)
     }
   }, [onTimeChange])
+
+  if (!video) {
+    return (
+      <div className={classes.videoContainer}>
+        <Skeleton className={classes.video} variant="rect" />
+      </div>
+    )
+  }
 
   const playerVars: PlayerVars = { playsinline: 1, autoplay: autoplay ? 1 : 0 }
   if (start) {
