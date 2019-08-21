@@ -26,6 +26,7 @@ import { ClipList } from "../../components/clipList"
 import LockIcon from "@material-ui/icons/Lock"
 import LockOpenIcon from "@material-ui/icons/LockOpen"
 import ReplayIcon from "@material-ui/icons/Replay"
+import Skeleton from "@material-ui/lab/Skeleton"
 
 const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
   const { videoId } = query
@@ -52,9 +53,11 @@ const ShowVideo: NextPage<{ query: Router["query"] }> = ({ query }) => {
   return (
     <Layout
       breadcrumbs={
-        <Typography variant="subtitle1">
-          {video ? video.name : "Video"}
-        </Typography>
+        video ? (
+          <Typography variant="subtitle1">{video.name}</Typography>
+        ) : (
+          <Skeleton width={150} />
+        )
       }
     >
       <Head>{video ? <title>Monster Factory: {video.name}</title> : null}</Head>
