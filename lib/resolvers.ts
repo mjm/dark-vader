@@ -72,6 +72,7 @@ export const Query: QueryResolvers = {
           if (clipArray.length) {
             return clipArray[0]
           } else {
+            console.log("missed random clip", randomID)
             return "not-found"
           }
         },
