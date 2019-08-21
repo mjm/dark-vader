@@ -218,7 +218,7 @@ const NavBar: React.FC<NavBarProps> = ({
         </Breadcrumbs>
         <Hidden implementation="css" smDown>
           <NextLink href="/clips/random" passHref>
-            <Button component="a" color="default" variant="contained">
+            <Button component="a" color="inherit" variant="outlined">
               {randomizing ? (
                 <Box mr={1} height={20}>
                   <CircularProgress size={20} color="inherit" />
