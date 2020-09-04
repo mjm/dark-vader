@@ -21,7 +21,7 @@
     "@material-ui/lab": "^4.0.0-alpha.23",
     "@types/graphql": "^14.2.3",
     "@types/ioredis": "^4.0.14",
-    "airtable": "^0.7.1",
+    "airtable": "^0.7.2",
     "apollo-cache-inmemory": "^1.6.2",
     "apollo-client": "^2.6.3",
     "apollo-link-http": "^1.5.15",
